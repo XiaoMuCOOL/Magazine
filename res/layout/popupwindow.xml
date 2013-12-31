@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#b5555555"
+    android:id="@+id/popupwidowFrameLayout"
+    >
+	<android.support.v4.view.ViewPager
+	    android:id="@+id/viewpagerLayout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" />
+	<ImageButton 
+	    android:layout_gravity="right"
+	    android:id="@+id/closeBtn"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:src="@drawable/close"/>
+    <Gallery 
+        android:id="@+id/gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spacing="0px"
+        android:background="#ee123456"
+        android:layout_gravity="bottom"/>
+</FrameLayout>

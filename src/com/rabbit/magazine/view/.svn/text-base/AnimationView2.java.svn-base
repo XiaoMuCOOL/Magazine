@@ -1,0 +1,124 @@
+package com.rabbit.magazine.view;
+
+import android.app.PendingIntent.OnFinished;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ViewFlipper;
+
+import com.rabbit.magazine.AppConfigUtil;
+import com.rabbit.magazine.kernel.Animation;
+import com.rabbit.magazine.util.ImageUtil;
+
+public class AnimationView2 extends ViewFlipper{
+	
+	private Animation animation;
+	
+	private Long delay;
+	
+	private int frameLength;
+	
+	private int totalChild;
+	
+	private boolean isCycling=false;
+	
+	private int curChildView=0;
+	
+	private boolean isRunning=true;
+	
+	private Context context;
+	
+	private Handler mHandler=new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			setDisplayedChild(msg.what);
+		};
+	};
+	
+	public Animation getAnimation2(){
+		return this.animation;
+	}
+	
+	public AnimationView2(Context context,Animation animation) {
+		super(context);
+		this.animation=animation;
+		this.context=context;
+		String frame = animation.getFrame();
+		int[] frames = FrameUtil.frame2int(frame);
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(frames[2], frames[3]);
+		params.setMargins(frames[0], frames[1],0,0);
+		setLayoutParams(params);
+		Float frameLength_=Float.parseFloat(animation.getFrameLength())*1000;
+		frameLength=frameLength_.intValue();
+		setFocusable(false);
+		initial();
+		totalChild=getChildCount();
+		Float delary_=Float.parseFloat(animation.getDelay())*1000;
+		delay=delary_.longValue();
+		if("true".equals(animation.getCycling().toLowerCase())){
+			isCycling=true;
+		}
+		start();
+	}
+	
+	public void initial(){
+		String[] resources=animation.getResources();
+		for(String resource:resources){
+			if(!resource.equals("")){
+				//resource=resource.replace("\n", "");
+				resource="/"+resource.trim();
+				ImageView img=new ImageView(context);
+				String imgPath=AppConfigUtil.getAppResourceImage(AppConfigUtil.MAGAZINE_ID, resource);
+				Bitmap bitmap=ImageUtil.loadImage(imgPath);
+				img.setImageBitmap(bitmap);
+				addView(img);
+			}
+		}
+	}
+	
+	public void start(){
+		isRunning=true;
+		curChildView=0;
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(delay);
+					while(isRunning){
+						Thread.sleep(frameLength);
+						if(curChildView==totalChild){
+							if(isCycling){
+								curChildView=0;
+							}else{
+								break;
+							}
+						}
+						Message msg=new Message();
+						msg.what=curChildView++;
+						mHandler.sendMessage(msg);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+	
+	public void stop(){
+		isRunning=false;
+	}
+	
+	public void release(){
+		int count=getChildCount();
+		for(int j=0;j<count;j++){
+			ImageView img=(ImageView) getChildAt(j);
+			ImageUtil.recycle(img);
+			img=null;
+		}
+		removeAllViews();
+		stop();
+	}
+}

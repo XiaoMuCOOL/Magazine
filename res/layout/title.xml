@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <Button 
+        android:id="@+id/back"
+        android:layout_width="50dip"
+        android:layout_height="40dip"
+        android:text="后退"/>
+    <Button 
+        android:layout_marginLeft="20dip"
+        android:id="@+id/forward"
+        android:layout_width="50dip"
+        android:layout_height="40dip"
+        android:text="向前"/>
+    <Button 
+        android:layout_gravity="right"
+        android:id="@+id/close"
+        android:layout_width="50dip"
+        android:layout_height="40dip"
+        android:text="关闭"/>
+
+</LinearLayout>

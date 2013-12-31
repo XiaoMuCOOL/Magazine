@@ -1,0 +1,60 @@
+10
+
+dir
+208
+http://rabbit-android-magazine.googlecode.com/svn/trunk/rabbit-android-magazine/res
+http://rabbit-android-magazine.googlecode.com/svn
+
+
+
+2012-11-14T14:39:12.999120Z
+199
+waishuna441224@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3e0aea63-372d-f164-10fa-fe2a1ecf1665
+
+values
+dir
+
+drawable
+dir
+
+
+
+add
+
+drawable-hdpi
+dir
+
+anim
+dir
+
+drawable-ldpi
+dir
+
+drawable-mdpi
+dir
+
+drawable-xhdpi
+dir
+
+
+
+delete
+
+layout
+dir
+

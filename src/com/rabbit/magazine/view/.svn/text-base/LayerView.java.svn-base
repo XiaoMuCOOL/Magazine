@@ -1,0 +1,133 @@
+package com.rabbit.magazine.view;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.View;
+import android.view.ViewParent;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.FrameLayout.LayoutParams;
+
+import com.rabbit.magazine.AppConfigUtil;
+import com.rabbit.magazine.kernel.Hot;
+import com.rabbit.magazine.kernel.Layer;
+import com.rabbit.magazine.kernel.Picture;
+import com.rabbit.magazine.util.ImageUtil;
+import com.rabbit.magazine.util.StringUtil;
+
+public class LayerView extends ImageView{
+
+	private Layer layer;
+	
+	private boolean isLoad=false;
+	
+	public boolean isLoad() {
+		return isLoad;
+	}
+
+	
+	public void setLoad(boolean isLoad) {
+		this.isLoad = isLoad;
+	}
+
+	public Layer getLayer() {
+		return layer;
+	}
+
+	public LayerView(Context context, Layer layer) {
+		super(context);
+		this.layer=layer;
+		int[] frames =FrameUtil.frame2int(layer.getFrame());
+		// 自动转换坐标，需要测试
+		frames=FrameUtil.autoAdjust(frames,context);
+		LayoutParams params = new LayoutParams(frames[2], frames[3]);
+		params.setMargins(frames[0], frames[1], 0, 0);
+		setLayoutParams(params);
+		setTag(layer.getName()+"#"+layer.getTag());
+	}
+	
+	@Override
+	public void setImageBitmap(Bitmap bm) {
+		super.setImageBitmap(bm);
+		isLoad=true;
+	}
+
+	public void show(){
+		ViewParent parent=getParent();
+		if(parent instanceof FirstGroupView){
+			FirstGroupView firstGroupView=(FirstGroupView) parent;
+			showImg(firstGroupView);
+		}else if(parent instanceof GroupView2){
+			GroupView2 groupView=(GroupView2) parent;
+			FrameLayout frameLayout=groupView.getFrameLayout();
+			showImg(frameLayout);
+		}
+	}
+
+	private void showImg(FrameLayout framelayout){
+		int childCount=framelayout.getChildCount();
+		String thisTag=getTag().toString();
+		for(int i=0;i<childCount;i++){
+			View view=framelayout.getChildAt(i);
+			if(view instanceof LayerView){
+				LayerView layerView=(LayerView)view;
+				Layer layer=layerView.getLayer();
+				String effect=layer.getEffect();
+				String tag=layerView.getTag().toString();
+				//当前已显示的LayerView，且具有动画的LayerView
+				if(layerView.isLoad&&!tag.equals(thisTag)&&effect!=null&&(effect.equals("SLIDE_RIGHT")||effect.equals("SLIDE_LEFT"))){
+					if("SLIDE_LEFT".equals(effect)){
+						Animation translate=new TranslateAnimation(0, -1024, 0, 0);
+						translate.setDuration(500);
+						LayerAnimationListener listener=new LayerAnimationListener(layerView);
+						translate.setAnimationListener(listener);
+						layerView.setAnimation(translate);
+						translate.startNow();
+					}else if("SLIDE_RIGHT".equals(effect)){
+						Animation translate=new TranslateAnimation(0, 1024, 0, 0);
+						translate.setDuration(500);
+						LayerAnimationListener listener=new LayerAnimationListener(layerView);
+						translate.setAnimationListener(listener);
+						layerView.setAnimation(translate);
+						translate.startNow();
+					}
+				}else if(tag.equals(thisTag)&&!layerView.isLoad){
+					Picture picture=layer.getPicture();
+					if(picture!=null){
+						String resource=picture.getResource();
+						String imgPath=AppConfigUtil.getAppResourceImage(AppConfigUtil.MAGAZINE_ID, resource);
+						Bitmap bitmap=ImageUtil.loadImage(imgPath);
+						layerView.setImageBitmap(bitmap);
+						if(effect!=null){
+							if("FADE".equals(effect)){
+								Animation alpha = new AlphaAnimation(0.0f, 1.0f);
+								alpha.setDuration(500);
+								layerView.setAnimation(alpha);
+								alpha.startNow();
+							}else if("SLIDE_LEFT".equals(effect)){
+								Animation translate=new TranslateAnimation(-1024, 0, 0, 0);
+								translate.setDuration(500);
+								layerView.setAnimation(translate);
+								translate.startNow();
+							}else if("SLIDE_RIGHT".equals(effect)){
+								Animation translate=new TranslateAnimation(1024, 0, 0, 0);
+								translate.setDuration(500);
+								layerView.setAnimation(translate);
+								translate.startNow();
+							}
+						}
+					}
+				}else{
+					ImageUtil.recycle(layerView);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,309 @@
+package com.rabbit.magazine;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.rabbit.magazine.bookshelf.MagazineItemView;
+import com.rabbit.magazine.http.HttpHelper;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+/**
+ * 书架浏览
+ * 
+ * @author litingwen
+ * 
+ */
+public class BookshelfAcvitity extends BaseActivity implements OnClickListener {
+
+	// Forbes
+//	private static final String Server = "http://imag.nexdoor.cn/api/getmagazinedata.php?code=19&debugger=true";
+	// Sony
+	private static final String Server = "http://imag.nexdoor.cn/api/getmagazinedata.php?code=21&debugger=true";
+	
+	private Map<String,String> magazineMap=new HashMap<String,String>();
+	private List<Magazineinfo> list = new ArrayList<Magazineinfo>();
+	private Button readBtn;
+	private ImageButton pageViewBtn;
+	private LayoutInflater layoutInflater;
+	private File[] listFiles;
+	private String bookdata = "MagazineList.dat";
+	private int height;
+	private File appDir;
+	private ViewFlipper viewFlipper;
+	private int width;
+	private ImageButton listViewBtn;
+	private ConnectivityManager manager;
+	private ImageButton infoBtn;
+
+	@Override
+	protected void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
+		Display defaultDisplay = getWindowManager().getDefaultDisplay();
+		width = defaultDisplay.getWidth();
+		height = defaultDisplay.getHeight();
+		appDir = getApplicationContext().getFilesDir();
+		layoutInflater = getLayoutInflater();
+		manager = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+		NetworkInfo info = manager.getActiveNetworkInfo();
+		if (info != null && info.isConnected()) {
+			downloadBookData();
+		}
+		refreshBooks();
+		showListView();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	private void showListView() {
+		View inflate = layoutInflater.inflate(R.layout.bookshelf, null);
+		setContentView(inflate);
+		// 操作面板
+		// 滑动展示
+		pageViewBtn = (ImageButton) findViewById(R.id.pageViewBtn);
+		pageViewBtn.setOnClickListener(this);
+		// 书架展示
+		listViewBtn = (ImageButton) findViewById(R.id.listViewBtn);
+		listViewBtn.setOnClickListener(this);
+		// license
+		infoBtn = (ImageButton) findViewById(R.id.magazineInfoBtn);
+		infoBtn.setOnClickListener(this);
+		//ScrollView right = (ScrollView) findViewById(R.id.rightpanal);
+		//right.setFocusableInTouchMode(true);
+		//right.getParent().requestDisallowInterceptTouchEvent(true);
+		GridView grid=(GridView)inflate.findViewById(R.id.grid);
+		//right.getLayoutParams().height = (height / 100) * 90;
+		
+		//GridView grid = new GridView(this);
+		//grid.setNumColumns(2);
+		grid.setAdapter(new MagazineListAdpater(this, list));
+		grid.setTop(5);
+		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		//right.addView(grid, params);
+		// 当期杂志:LeftPanel
+		if (list != null && list.size() > 0) {
+			Magazineinfo magazine = list.get(list.size()-1);
+			MagazineItemView view = new MagazineItemView(this, magazine);
+			View currentContent = view.getContent();
+			ViewGroup left = (ViewGroup) findViewById(R.id.leftpanel);
+			left.addView(currentContent);
+		}
+	}
+
+	private void downloadBookData() {
+		HttpClient client = new DefaultHttpClient();
+		StringBuilder builder = new StringBuilder();
+		HttpGet get = new HttpGet(Server);
+		try {
+			HttpResponse response = client.execute(get);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+				builder.append(s);
+			}
+			File file = new File(appDir + File.separator + bookdata);
+			if (file.exists()) {
+
+			} else {
+				file.createNewFile();
+				FileWriter writer = new FileWriter(file);
+				writer.write(builder.toString());
+				writer.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void refreshBooks() {
+		try {
+			StringBuilder builder = new StringBuilder();
+			String path = appDir + File.separator + bookdata;
+			File datafile=new File(path);
+			if(datafile.exists()){
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(datafile)));
+				for (String s = reader.readLine(); s != null; s = reader.readLine()) {
+					builder.append(s);
+				}
+				JSONArray jsonArray;
+				jsonArray = new JSONArray(builder.toString());
+				for (int i = 0; i < jsonArray.length(); ++i) {
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					Magazineinfo info = new Magazineinfo();
+					int id = jsonObject.getInt("id");
+					info.setId(id);
+					Log.i("id", id + "");
+					String coverImage = jsonObject.getString("cover_image");
+					Log.i("cover_image", coverImage);
+					info.setCoverImage(coverImage);
+					String zip = jsonObject.getString("zip_url");
+					Log.i("zip_url", zip);
+					info.setZipUrl(zip);
+					String title = jsonObject.getString("title");
+					Log.i("title", title);
+					info.setTitle(title);
+					magazineMap.put(id+"", title);
+					list.add(info);
+				}
+			}
+			String appExtDir = AppConfigUtil.getAppExtDir();
+			File extDir=new File(appExtDir);
+			if(extDir.isDirectory()){
+				File[] files = extDir.listFiles();
+				for (int i = 0; i < files.length; i++) {
+					File file = files[i];
+					// Resource Zip 和 Resource 
+					if(file.isDirectory()){
+						String name = file.getName();
+						if(!magazineMap.containsKey(name)){
+							Magazineinfo info = new Magazineinfo();
+							info.setId(Integer.parseInt(name));
+							info.setTitle(name);
+							magazineMap.put(name+"", name);
+							list.add(info);
+						}
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.e("", e.getLocalizedMessage());
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.listViewBtn) {
+			showListView();
+		} else if (v.getId() == R.id.magazineInfoBtn) {
+			ImageView imView = new ImageView(this);
+			Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.license);
+			imView.setImageBitmap(image);
+			ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+					ViewGroup.LayoutParams.WRAP_CONTENT);
+			params.height = getWindowManager().getDefaultDisplay().getHeight();
+			params.width = getWindowManager().getDefaultDisplay().getWidth();
+			imView.setLayoutParams(params);
+			LinearLayout view = (LinearLayout) findViewById(R.id.shelfLayer);
+			view.removeAllViews();
+			view.addView(imView);
+		} else if (v.getId() == R.id.pageViewBtn) {
+			View page = layoutInflater.inflate(R.layout.bookshelf_page, null);
+			viewFlipper = (ViewFlipper) page.findViewById(R.id.viewFlipper1);
+			viewFlipper.setOnTouchListener(new OnTouchListener() {
+
+				float downXValue = 0;
+
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+
+					int i = event.getAction();
+					switch (i) {
+					case MotionEvent.ACTION_DOWN: {
+						downXValue = event.getX();
+						break;
+					}
+					case MotionEvent.ACTION_UP: {
+						float currentX = event.getX();
+						if ((currentX - downXValue) < -300) {
+							viewFlipper.setInAnimation(AnimationUtils.loadAnimation(BookshelfAcvitity.this,
+									R.anim.push_left_in));
+							viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(BookshelfAcvitity.this,
+									R.anim.push_left_out));
+							viewFlipper.showNext();
+						}
+						if ((currentX - downXValue) > 300) {
+							viewFlipper.setInAnimation(AnimationUtils.loadAnimation(BookshelfAcvitity.this,
+									R.anim.push_right_in));
+							viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(BookshelfAcvitity.this,
+									R.anim.push_right_out));
+							viewFlipper.showPrevious();
+						}
+						break;
+					}
+					}
+					return true;
+				}
+			});
+			HttpHelper helper = new HttpHelper();
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Magazineinfo magazine = (Magazineinfo) iterator.next();
+				String path = helper.getCoverPath(magazine, appDir);
+				LinearLayout item = (LinearLayout) layoutInflater.inflate(R.layout.bookshelf_item_2, null);
+				LayoutParams params = new LayoutParams(width, height - 100);
+				item.setLayoutParams(params);
+				ImageView image = (ImageView) item.findViewById(R.id.imageView1);
+				FileInputStream ot = null;
+				try {
+					ot = new FileInputStream(path);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				BitmapDrawable drawable = new BitmapDrawable(ot);
+				if (drawable != null) {
+					image.setImageDrawable(drawable);
+				}
+				// TextView text = (TextView) item.findViewById(R.id.textView1);
+				// text.setText(magazine.getTitle());
+				viewFlipper.addView(item);
+			}
+			LinearLayout view = (LinearLayout) findViewById(R.id.shelfLayer);
+			view.removeAllViews();
+			view.addView(page);
+		}
+
+	}
+
+}

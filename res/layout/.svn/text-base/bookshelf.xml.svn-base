@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="69dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:text="@string/FreeSubstribe" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:text="@string/Buy" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_height="74dp"
+            android:layout_width="0dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/Title" />
+
+        <ImageButton
+            android:id="@+id/pageViewBtn"
+            android:layout_width="60dip"
+            android:layout_height="fill_parent"
+            android:contentDescription="@string/bookshelf_page"
+            android:src="@drawable/page" android:scaleType="fitXY" android:background="#00000000"/>
+
+        <ImageButton
+            android:id="@+id/listViewBtn"
+            android:layout_width="60dip"
+            android:layout_height="fill_parent"
+            android:background="#00000000"
+            android:contentDescription="@string/bookshelf_list"
+            android:scaleType="fitXY"
+            android:src="@drawable/list" />
+
+        <ImageButton
+            android:id="@+id/magazineInfoBtn"
+            android:layout_width="60dip"
+            android:layout_height="fill_parent"
+            android:contentDescription="@string/bookshelf_license"
+            android:src="@drawable/get_info" android:scaleType="fitXY"  android:background="#00000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@id/shelfLayer"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="12"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/leftpanel"
+            android:layout_width="0dip"
+            android:layout_weight="0.4"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"  >
+        </LinearLayout>
+
+        <GridView 
+	    android:id="@+id/grid"
+	     android:layout_weight="0.6"
+	     android:layout_gravity="right"
+	     android:fillViewport="true"
+	    android:layout_width="400dip" 
+	    android:layout_height="wrap_content"
+	    android:numColumns="2"
+	    android:gravity="center"
+	/>
+    </LinearLayout>
+
+</LinearLayout>

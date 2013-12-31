@@ -1,0 +1,12 @@
+!SESSION 2013-01-07 15:00:51.636 -----------------------------------------------
+eclipse.buildId=M20120914-1800
+java.version=1.6.0_26
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=zh_CN
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY com.android.ide.eclipse.ddms 4 0 2013-01-07 15:00:58.027
+!MESSAGE DDMS files not found: C:\Michael_qin\eclipse\platform-tools\adb.exe C:\Michael_qin\eclipse\tools\hprof-conv.exe C:\Michael_qin\eclipse\tools\traceview.bat 
+
+!ENTRY org.eclipse.ui 2 2 2013-01-07 15:02:13.522
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)

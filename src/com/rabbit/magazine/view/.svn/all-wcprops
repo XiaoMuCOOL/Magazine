@@ -1,0 +1,227 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/210/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view
+END
+FirstGroupView.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/217/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/FirstGroupView.java
+END
+HorizontalGroupView.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/217/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/HorizontalGroupView.java
+END
+GroupSplitView.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/53/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/GroupSplitView.java
+END
+PictureLayerView.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/7/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PictureLayerView.java
+END
+LayerView.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/197/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/LayerView.java
+END
+AnimationView.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/126/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/AnimationView.java
+END
+PageViewContainer.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/40/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PageViewContainer.java
+END
+RotaterView.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/218/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/RotaterView.java
+END
+FlipperPageView2.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/209/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/FlipperPageView2.java
+END
+TitleView.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/7/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/TitleView.java
+END
+SliderView.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/215/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/SliderView.java
+END
+CategoryAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/61/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/CategoryAdapter.java
+END
+LayerAnimationListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/198/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/LayerAnimationListener.java
+END
+HotView.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/217/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/HotView.java
+END
+PopupWindowAnimationView.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/127/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PopupWindowAnimationView.java
+END
+GalleryPageView.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/208/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/GalleryPageView.java
+END
+FrameUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/194/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/FrameUtil.java
+END
+ShutterView.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/215/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/ShutterView.java
+END
+FlipperPageView.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/103/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/FlipperPageView.java
+END
+PageView2.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/217/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PageView2.java
+END
+MagazinePageAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/7/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/MagazinePageAdapter.java
+END
+AnimationView2.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/147/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/AnimationView2.java
+END
+CustVideoView.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/214/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/CustVideoView.java
+END
+PictureSetPopupWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/219/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PictureSetPopupWindow.java
+END
+PictureView.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/135/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PictureView.java
+END
+PageView.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/103/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PageView.java
+END
+CategoryView.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/3/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/CategoryView.java
+END
+GroupView2.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/217/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/GroupView2.java
+END
+ImageViewAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/175/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/ImageViewAdapter.java
+END
+FlipperPagerAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/219/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/FlipperPagerAdapter.java
+END
+PictureSetView.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/220/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PictureSetView.java
+END
+PopupWindowPictureView.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/174/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PopupWindowPictureView.java
+END
+PopupWindowPageViewAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/116/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PopupWindowPageViewAdapter.java
+END
+GroupView.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/84/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/GroupView.java
+END
+AnimationPopupWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/126/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/AnimationPopupWindow.java
+END
+PopupWindowAnimationAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/127/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/PopupWindowAnimationAdapter.java
+END
+ScrollImageView.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/49/trunk/rabbit-android-magazine/src/com/rabbit/magazine/view/ScrollImageView.java
+END

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, Magazine1Activity!</string>
+    <string name="app_name">杂志阅读</string>
+    <string name="pageframe">pageframe</string>
+    <string name="Title">杂志书架</string>
+    <string name="FreeSubstribe">免费订阅</string>
+    <string name="Buy">购买</string>
+    <string name="bookshelf_page">翻页书架</string>
+    <string name="bookshelf_list">书架列表</string>
+    <string name="bookshelf_license">版权所有</string>
+    <string name="readBtn">阅读</string>
+    <string name="downLoadBtn">下载</string>
+    <string name="Forbes">福布斯杂志9月</string>
+    <string name="image">封面</string>
+
+</resources>

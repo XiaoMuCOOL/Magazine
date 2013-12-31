@@ -1,0 +1,53 @@
+package com.rabbit.magazine.view;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.ImageView;
+import com.rabbit.magazine.kernel.Group;
+import com.rabbit.magazine.kernel.Picture;
+
+public class PictureView extends ImageView {
+
+	private boolean isLoad=false;
+	
+	public boolean isLoad() {
+		return isLoad;
+	}
+
+	public void setLoad(boolean isLoad) {
+		this.isLoad = isLoad;
+	}
+
+	private Picture picture;
+	public Picture getPicture() {
+		return picture;
+	}
+
+	private Group group;
+	public Group getGroup() {
+		return group;
+	}
+	
+
+	public PictureView(Context context,Group group,Picture picture){
+		super(context);
+		this.picture = picture;
+		this.group=group;
+		String frame=picture.getFrame();
+		if(frame==null){
+			frame=group.getFrame();
+		}
+		int[] frames=FrameUtil.frame2int(frame);
+		frames=FrameUtil.autoAdjust(frames,context);
+		LayoutParams params=new LayoutParams(frames[2],frames[3]);
+		params.setMargins(frames[0], frames[1], 0, 0);
+		setLayoutParams(params);
+	}
+
+	@Override
+	public void setImageBitmap(Bitmap bm) {
+		super.setImageBitmap(bm);
+		isLoad=true;
+	}
+}

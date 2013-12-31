@@ -1,0 +1,34 @@
+package com.rabbit.magazine;
+
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+
+public abstract class BaseActivity extends Activity {
+
+	ArrayList<SoftReference<Bitmap>> bitmaps = new ArrayList<SoftReference<Bitmap>>();
+
+	@Override
+	protected void onDestroy() {
+		recycle();
+		super.onDestroy();
+	}
+
+	public void addBitMap(Bitmap bitmap) {
+		bitmaps.add(new SoftReference<Bitmap>(bitmap));
+	}
+
+	public void recycle() {
+		for (Iterator iterator = bitmaps.iterator(); iterator.hasNext();) {
+			SoftReference<Bitmap> reference = (SoftReference<Bitmap>) iterator.next();
+			Bitmap bitmap2 = reference.get();
+			if (bitmap2 != null) {
+				bitmap2.recycle();
+			}
+		}
+		System.gc();
+	}
+}

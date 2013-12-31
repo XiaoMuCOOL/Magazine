@@ -1,0 +1,155 @@
+package com.rabbit.magazine.view;
+
+import android.app.Activity;
+import android.content.Context;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.view.Display;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.MediaController;
+import android.widget.VideoView;
+
+import com.rabbit.magazine.AppConfigUtil;
+import com.rabbit.magazine.MagazineActivity;
+import com.rabbit.magazine.kernel.Video;
+
+public class CustVideoView extends VideoView implements OnClickListener {
+
+	private boolean autoClose=false;
+
+	private Video video;
+
+	private Activity act;
+
+	private String fullscreen;
+	
+	private boolean load=true;
+	
+	public CustVideoView(final Context context, Video video) {
+		super(context);
+		this.setVideo(video);
+		String frame = video.getFrame();
+		String closesOnEnd = video.getClosesOnEnd();
+		if (closesOnEnd.equalsIgnoreCase("true")) {
+			autoClose = true;
+		}
+		fullscreen = video.getFullscreen();
+		FrameLayout.LayoutParams params;
+		int[] frames = FrameUtil.frame2int(frame);
+		frames=FrameUtil.autoAdjust(frames, context);
+		// 全屏模式
+		if(fullscreen.equalsIgnoreCase("true")){
+			act = (Activity) context;
+			Display display = act.getWindowManager().getDefaultDisplay();
+			int width = display.getWidth();
+			int height=display.getHeight();
+			params = new FrameLayout.LayoutParams(width, height);
+			params.topMargin=0;
+			params.leftMargin=0;
+			setMeasuredDimension(width, height);
+			//  全屏模式增加触摸事件 
+			setOnTouchListener(new OnTouchListener() {
+				
+				private int downX;
+				
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					if(event.getAction()==MotionEvent.ACTION_DOWN){
+						downX= new Float(event.getX()).intValue();
+						return true;
+					}
+					else if(event.getAction()==MotionEvent.ACTION_MOVE){
+						int move=new Float(event.getX()).intValue();;
+					    stopPlayback();
+					    
+						MagazineActivity act=(MagazineActivity)context;
+						FlipperPageView2 pager = act.getFlipperPageView();
+						pager.setCurrentItem(pager.getCurrentItem(),true);
+						return true;
+					}
+					else if(event.getAction()==MotionEvent.ACTION_UP){
+						stopPlayback();
+						setVisibility(View.GONE);
+						return true;
+					}
+					return false;
+				}
+			});
+		}else {
+			params = new FrameLayout.LayoutParams(frames[2], frames[3]);	
+			params.setMargins(frames[0], frames[1], 0, 0);
+		}
+		setLayoutParams(params);
+		String path = AppConfigUtil.getAppResource(AppConfigUtil.MAGAZINE_ID) + video.getResource();
+		setVideoPath(path);
+		MediaController mediaController = new MediaController(context);
+		mediaController.setLayoutParams(params);
+		setMediaController(mediaController);
+		setVisibility(View.VISIBLE);
+		setOnCompletionListener(new OnCompletionListener() {
+
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				if (autoClose) {
+					setVisibility(View.GONE);
+				}
+			}
+		});
+		setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+
+	}
+	
+	
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		// 全屏模式
+		if(fullscreen.equalsIgnoreCase("true")){
+			Display display = act.getWindowManager().getDefaultDisplay();
+			int width = display.getWidth();
+			int height=display.getHeight();
+			setMeasuredDimension(width, height);
+		}
+		else  {
+			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		}
+	}
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		// 全屏模式
+		String fullscreen = video.getFullscreen();
+		if(fullscreen.equalsIgnoreCase("true")){
+			Display display = act.getWindowManager().getDefaultDisplay();
+			int width = display.getWidth();
+			int height=display.getHeight();
+			super.onLayout(changed, left, top, width, height);
+		}else {
+			super.onLayout(changed, left, top, right, bottom);
+		}
+	}
+
+	public void setVideo(Video video) {
+		this.video = video;
+	}
+
+	public Video getVideo() {
+		return video;
+	}
+
+	public void setUnload(boolean unload) {
+		this.load = unload;
+	}
+
+	public boolean isUnload() {
+		return load;
+	}
+}

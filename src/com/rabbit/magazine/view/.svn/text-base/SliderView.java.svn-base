@@ -1,0 +1,151 @@
+package com.rabbit.magazine.view;
+
+import java.util.List;
+import com.rabbit.magazine.AppConfigUtil;
+import com.rabbit.magazine.R;
+import com.rabbit.magazine.kernel.Picture;
+import com.rabbit.magazine.kernel.Slider;
+import com.rabbit.magazine.util.ImageUtil;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ViewFlipper;
+
+public class SliderView extends FrameLayout  implements android.view.View.OnTouchListener{
+	
+	private ViewFlipper viewFlipper;
+	
+	private LinearLayout linear;
+	
+	private Context context;
+	
+	private float downXValue=0;
+	
+	public SliderView(Context context,Slider slider) {
+		super(context);
+		this.context=context;
+		String frame = slider.getFrame();
+		int[] frames = FrameUtil.frame2int(frame);
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(frames[2], frames[3]);
+		params.setMargins(frames[0], frames[1],0,0);
+		setLayoutParams(params);
+		viewFlipper=new ViewFlipper(context);
+		addView(viewFlipper);
+		linear=new LinearLayout(context);
+		linear.setGravity(Gravity.LEFT|Gravity.BOTTOM);
+		linear.setOrientation(LinearLayout.HORIZONTAL);
+		List<Picture> pictures=slider.getPictures();
+		for(int i=0;i<pictures.size();i++){
+			ImageView img=new ImageView(context);
+			String resource=pictures.get(i).getResource();
+			img.setTag(resource);
+			img.setId(i);
+			viewFlipper.addView(img);
+			Button btn=new Button(context);
+			btn.setText(String.valueOf(i+1));
+			btn.setTag(i);
+			android.widget.LinearLayout.LayoutParams params_=new android.widget.LinearLayout.LayoutParams(48, 48);
+			params_.setMargins(30, 0, 0, 0);
+			btn.setLayoutParams(params_);
+			if(i==0){
+				btn.setBackgroundColor(Color.RED);
+			}else{
+				btn.setBackgroundColor(Color.WHITE);
+			}
+			linear.addView(btn);
+		}
+		addView(linear);
+		setFocusable(true);
+		setOnTouchListener(this);
+	}
+	
+	public void loadResource(){
+		int count=viewFlipper.getChildCount();
+		for(int i=0;i<count;i++){
+			View view=viewFlipper.getChildAt(i);
+			if(view instanceof ImageView){
+				ImageView img=(ImageView)view;
+				String resource=img.getTag().toString();
+				String imgPath=AppConfigUtil.getAppResourceImage(AppConfigUtil.MAGAZINE_ID, resource);
+				Bitmap bitmap=ImageUtil.loadImage(imgPath);
+				img.setImageBitmap(bitmap);
+			}
+			if(view instanceof LinearLayout){
+				
+			}
+		}
+	}
+
+	public ViewFlipper getViewFlipper() {
+		return viewFlipper;
+	}
+	
+	public void release(){
+		int count=viewFlipper.getChildCount();
+		for(int i=0;i<count;i++){
+			View view=viewFlipper.getChildAt(i);
+			if(view instanceof ImageView){
+				ImageUtil.recycle((ImageView)view);
+			}
+			if(view instanceof LinearLayout){
+				
+			}
+		}
+	}
+
+	private void setIndicatorBackground() {
+		ImageView img=(ImageView) viewFlipper.getCurrentView();
+		int id=img.getId();
+		int count=linear.getChildCount();
+		for(int i=0;i<count;i++){
+			Button btn=(Button) linear.getChildAt(i);
+			if(i!=id){
+				btn.setBackgroundColor(Color.WHITE);
+			}else{
+				btn.setBackgroundColor(Color.RED);
+			}
+		}
+	}
+
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		view.getParent().requestDisallowInterceptTouchEvent(true);
+		int i=event.getAction();
+		switch(i){   
+			case MotionEvent.ACTION_DOWN:{    
+	           downXValue =event.getX();   
+	           return true;   
+			}    
+			case MotionEvent.ACTION_UP:{   
+	           float currentX =event.getX();               
+	           if ((currentX-downXValue) <-80){   
+	        	   viewFlipper.setInAnimation(AnimationUtils.loadAnimation(context,R.anim.push_left_in));
+	        	   viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(context,R.anim.push_left_out));
+	        	   viewFlipper.showNext(); 
+	        	   setIndicatorBackground();
+	           }    
+	           if ((currentX-downXValue) >80){   
+	        	   viewFlipper.setInAnimation(AnimationUtils.loadAnimation(context,R.anim.push_right_in));
+	        	   viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(context,R.anim.push_right_out));
+	        	   viewFlipper.showPrevious();   
+	        	   setIndicatorBackground();
+	           }   
+	           break;  
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="78dp"
+        android:gravity="top" >
+
+        <ImageButton
+            android:id="@+id/catetoryBtn"
+          android:layout_width="60dip"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="36dp"
+            android:src="@drawable/category" android:scaleType="fitXY" android:background="#00000000"/>
+
+        <ImageButton
+            android:id="@+id/backHomeBtn"
+          android:layout_width="60dip"
+           android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/imageButton3"
+            android:layout_marginLeft="48dp"
+            android:src="@drawable/home" 
+            android:scaleType="fitXY" android:background="#00000000"
+            />
+
+        <ImageButton
+            android:id="@+id/shareBtn"
+           android:layout_width="60dip"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="23dp"
+            android:layout_toRightOf="@+id/backHomeBtn"
+            android:layout_weight="0.00"
+            android:src="@drawable/share" android:scaleType="fitXY" android:background="#00000000"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="0.08"
+        android:alpha="50">
+
+	<Gallery
+	    android:id="@+id/gallery1"
+	    android:layout_width="0dip"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="0.23"
+	    android:visibility="invisible" android:background="#FFFFFF" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.01" >
+
+    </LinearLayout>
+
+</LinearLayout>

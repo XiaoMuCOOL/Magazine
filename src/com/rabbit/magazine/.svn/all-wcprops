@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/208/trunk/rabbit-android-magazine/src/com/rabbit/magazine
+END
+MagazineLoaderActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/160/trunk/rabbit-android-magazine/src/com/rabbit/magazine/MagazineLoaderActivity.java
+END
+AppConfigUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/88/trunk/rabbit-android-magazine/src/com/rabbit/magazine/AppConfigUtil.java
+END
+Magazineinfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/7/trunk/rabbit-android-magazine/src/com/rabbit/magazine/Magazineinfo.java
+END
+BaseActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/76/trunk/rabbit-android-magazine/src/com/rabbit/magazine/BaseActivity.java
+END
+MagazineActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/213/trunk/rabbit-android-magazine/src/com/rabbit/magazine/MagazineActivity.java
+END
+MagazineListAdpater.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/220/trunk/rabbit-android-magazine/src/com/rabbit/magazine/MagazineListAdpater.java
+END
+BookshelfAcvitity.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/220/trunk/rabbit-android-magazine/src/com/rabbit/magazine/BookshelfAcvitity.java
+END
+MagazinePageAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/164/trunk/rabbit-android-magazine/src/com/rabbit/magazine/MagazinePageAdapter.java
+END
+MagazineExtActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/100/trunk/rabbit-android-magazine/src/com/rabbit/magazine/MagazineExtActivity.java
+END
