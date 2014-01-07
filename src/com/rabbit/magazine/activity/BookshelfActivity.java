@@ -112,29 +112,23 @@ public class BookshelfActivity extends Activity{
 			case 1:
 				adjustWidgetParams();
 				
+				ImageButton delImgBtn=(ImageButton)findViewById(R.id.btn_del);
+				delImgBtn.setImageResource(R.drawable.btn_delete_off);
+				
 				ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
-				listImgBtn.setImageResource(R.drawable.btn_list_on);
-				
-				ImageButton gerenImgBtn=(ImageButton)findViewById(R.id.btn_geren);
-				gerenImgBtn.setImageResource(R.drawable.btn_geren_off);
-				
-				ImageButton shuqianImgBtn=(ImageButton)findViewById(R.id.btn_shuqian);
-				shuqianImgBtn.setImageResource(R.drawable.btn_shuqian_off);
-				
-				ImageButton banquanImgBtn=(ImageButton)findViewById(R.id.btn_banquan);
-				banquanImgBtn.setImageResource(R.drawable.btn_banquan_off);
-				
-				ImageButton qrImgBtn=(ImageButton)findViewById(R.id.btn_qr);
-				qrImgBtn.setImageResource(R.drawable.btn_qr_off);
-				
-				ImageButton fenxiangImgBtn=(ImageButton)findViewById(R.id.btn_fenxiang);
-				fenxiangImgBtn.setImageResource(R.drawable.btn_fenxiang_off);
+				listImgBtn.setImageResource(R.drawable.new_btn_list_on);
 				
 				ImageButton dingyueImgBtn=(ImageButton)findViewById(R.id.btn_dingyue);
-				dingyueImgBtn.setImageResource(R.drawable.btn_dignyue_off);
+				dingyueImgBtn.setImageResource(R.drawable.btn_dingyue_off);
 				
-				HorizontalScrollView bottomScroll=(HorizontalScrollView)findViewById(R.id.bottomScroll);
-				bottomScroll.setBackgroundResource(R.drawable.list_bg_bottom);
+				ImageButton gerenImgBtn=(ImageButton)findViewById(R.id.btn_geren);
+				gerenImgBtn.setImageResource(R.drawable.new_btn_geren_off);
+				
+				ImageButton banquanImgBtn=(ImageButton)findViewById(R.id.btn_banquan);
+				banquanImgBtn.setImageResource(R.drawable.new_btn_banquan_off);
+				
+				//HorizontalScrollView bottomScroll=(HorizontalScrollView)findViewById(R.id.bottomScroll);
+				//bottomScroll.setBackgroundResource(R.drawable.list_bg_bottom);
 				
 				LinearLayout imgLayout=(LinearLayout)findViewById(R.id.imgLayout);
 				int imgLayoutCount=imgLayout.getChildCount();
@@ -174,13 +168,13 @@ public class BookshelfActivity extends Activity{
 		if(getIntent().getExtras()!=null){
 			fromMagazineActivity=getIntent().getExtras().getBoolean("fromMagazineActivity");
 		}
-		setContentView(R.layout.bookshelf);
+		setContentView(R.layout.bookshelf2);
 		AppConfigUtil.WIDTH_ADJUST=1024;
 		AppConfigUtil.HEIGHT_ADJUST=768;
 		gerenGrid=(GridView)findViewById(R.id.gerenGrid);
 		favoriteGrid=(GridView)findViewById(R.id.shuqianGrid);
 		RelativeLayout bgLayout=(RelativeLayout)findViewById(R.id.bg);
-		bgLayout.setBackgroundResource(R.drawable.bg_all);
+		bgLayout.setBackgroundResource(R.drawable.new_bg_all);
 		
 		Button rightDownloadBtn=(Button)findViewById(R.id.rightDownloadBtn);
 		rightDownloadBtn.setOnClickListener(new OnClickListener() {
@@ -238,54 +232,55 @@ public class BookshelfActivity extends Activity{
 	}
 	
 	private void adjustWidgetParams(){
-		//TopBar
+		//TopBar 
 		RelativeLayout topLayout=(RelativeLayout)findViewById(R.id.top);
+		topLayout.setPadding(0, 0, 0, 15);
 		LayoutParams topParams=(LayoutParams) topLayout.getLayoutParams();
 		int[] frames=FrameUtil.autoAdjust(new int[]{0,85,AppConfigUtil.WIDTH_ADJUST,55}, this);
 		topParams.width=frames[2];
 		topParams.height=frames[3];
-		topParams.setMargins(0, frames[1], 0, 0);
+		topParams.setMargins(0, 0, 0, 0);
 		
 		ImageButton listBtn=(ImageButton)topLayout.findViewById(R.id.list);
 		LayoutParams listBtnParams=(LayoutParams) listBtn.getLayoutParams();
 		frames=FrameUtil.autoAdjust(new int[]{30,0,34,34}, this);
 		listBtnParams.width=frames[2];
 		listBtnParams.height=frames[3];
-		listBtnParams.setMargins(frames[0], frames[1], 0, 0);
+		//listBtnParams.setMargins(frames[0], frames[1], 0, 0);
 		
 		ImageButton gerenBtn=(ImageButton)topLayout.findViewById(R.id.btn_geren);
 		LayoutParams gerenBtnParams=(LayoutParams) gerenBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{34,34}, this);
+		frames=FrameUtil.autoAdjust(new int[]{27,23}, this);
 		gerenBtnParams.width=frames[0];
 		gerenBtnParams.height=frames[1];
 		
-		ImageButton shuqianBtn=(ImageButton)topLayout.findViewById(R.id.btn_shuqian);
+		/*ImageButton shuqianBtn=(ImageButton)topLayout.findViewById(R.id.btn_shuqian);
 		LayoutParams shuqianBtnParams=(LayoutParams) shuqianBtn.getLayoutParams();
 		frames=FrameUtil.autoAdjust(new int[]{34,34}, this);
 		shuqianBtnParams.width=frames[0];
-		shuqianBtnParams.height=frames[1];
+		shuqianBtnParams.height=frames[1];*/
 		
 		ImageButton banquanBtn=(ImageButton)topLayout.findViewById(R.id.btn_banquan);
 		LayoutParams banquanBtnParams=(LayoutParams) banquanBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{34,34}, this);
+		frames=FrameUtil.autoAdjust(new int[]{13,27}, this);
 		banquanBtnParams.width=frames[0];
 		banquanBtnParams.height=frames[1];
 		
-		ImageButton qrBtn=(ImageButton)topLayout.findViewById(R.id.btn_qr);
+		/*ImageButton qrBtn=(ImageButton)topLayout.findViewById(R.id.btn_qr);
 		LayoutParams qrBtnParams=(LayoutParams) qrBtn.getLayoutParams();
 		frames=FrameUtil.autoAdjust(new int[]{34,34}, this);
 		qrBtnParams.width=frames[0];
-		qrBtnParams.height=frames[1];
+		qrBtnParams.height=frames[1];*/
 		
-		ImageButton fenxiangBtn=(ImageButton)topLayout.findViewById(R.id.btn_fenxiang);
+		ImageButton fenxiangBtn=(ImageButton)topLayout.findViewById(R.id.btn_del);
 		LayoutParams fenxiangBtnParams=(LayoutParams) fenxiangBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{34,34}, this);
+		frames=FrameUtil.autoAdjust(new int[]{20,23}, this);
 		fenxiangBtnParams.width=frames[0];
 		fenxiangBtnParams.height=frames[1];
 		
 		ImageButton dignyueBtn=(ImageButton)topLayout.findViewById(R.id.btn_dingyue);
 		LayoutParams dignyueBtnParams=(LayoutParams) dignyueBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{34,34}, this);
+		frames=FrameUtil.autoAdjust(new int[]{20,31}, this);
 		dignyueBtnParams.width=frames[0];
 		dignyueBtnParams.height=frames[1];
 		
@@ -295,7 +290,7 @@ public class BookshelfActivity extends Activity{
 		LayoutParams bottomScrollParams=(LayoutParams)bottomScroll.getLayoutParams();
 		frames=FrameUtil.autoAdjust(new int[]{AppConfigUtil.WIDTH_ADJUST,211,0,35}, this);
 		bottomScroll.setPadding(0, frames[3], 0, 0);
-		bottomScrollParams.height=frames[1];
+		bottomScrollParams.height=730;//frames[1];
 		
 		LinearLayout bottomLayout=(LinearLayout)findViewById(R.id.scroll_layout);
 		android.widget.FrameLayout.LayoutParams bottomLayoutParams=(android.widget.FrameLayout.LayoutParams) bottomLayout.getLayoutParams();
@@ -909,7 +904,7 @@ public class BookshelfActivity extends Activity{
 		layoutInvisible();
 		setImageDrawable();
 		ImageButton btn=(ImageButton)v;
-		btn.setImageResource(R.drawable.btn_list_on);
+		btn.setImageResource(R.drawable.new_btn_list_on);
 		findViewById(R.id.listLinearLayout).setVisibility(View.VISIBLE);
 	}
 	
@@ -921,33 +916,27 @@ public class BookshelfActivity extends Activity{
 	}
 	
 	private void setImageDrawable(){
-		ImageButton listBtn=(ImageButton)findViewById(R.id.list);
-		listBtn.setImageResource(R.drawable.btn_list_off);
+		ImageButton delImgBtn=(ImageButton)findViewById(R.id.btn_del);
+		delImgBtn.setImageResource(R.drawable.btn_delete_off);
 		
-		ImageButton gerenBtn=(ImageButton) findViewById(R.id.btn_geren);
-		gerenBtn.setImageResource(R.drawable.btn_geren_off);
+		ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
+		listImgBtn.setImageResource(R.drawable.new_btn_list_off);
 		
-		ImageButton shuqiBtn=(ImageButton) findViewById(R.id.btn_shuqian);
-		shuqiBtn.setImageResource(R.drawable.btn_shuqian_off);
+		ImageButton dingyueImgBtn=(ImageButton)findViewById(R.id.btn_dingyue);
+		dingyueImgBtn.setImageResource(R.drawable.btn_dingyue_off);
 		
-		ImageButton btn_banquanBtn=(ImageButton) findViewById(R.id.btn_banquan);
-		btn_banquanBtn.setImageResource(R.drawable.btn_banquan_off);
+		ImageButton gerenImgBtn=(ImageButton)findViewById(R.id.btn_geren);
+		gerenImgBtn.setImageResource(R.drawable.new_btn_geren_off);
 		
-		ImageButton qrBtn=(ImageButton) findViewById(R.id.btn_qr);
-		qrBtn.setImageResource(R.drawable.btn_qr_off);
-		
-		ImageButton fenxiangBtn=(ImageButton) findViewById(R.id.btn_fenxiang);
-		fenxiangBtn.setImageResource(R.drawable.btn_fenxiang_off);
-		
-		ImageButton dingyueBtn=(ImageButton) findViewById(R.id.btn_dingyue);
-		dingyueBtn.setImageResource(R.drawable.btn_dignyue_off);
+		ImageButton banquanImgBtn=(ImageButton)findViewById(R.id.btn_banquan);
+		banquanImgBtn.setImageResource(R.drawable.new_btn_banquan_off);
 	}
 	
 	public void gerenClick(View v){
 		layoutInvisible();
 		setImageDrawable();
 		ImageButton btn=(ImageButton)v;
-		btn.setImageResource(R.drawable.btn_geren_on);
+		btn.setImageResource(R.drawable.new_btn_geren_on);
 		findViewById(R.id.gerenFrameLayout).setVisibility(View.VISIBLE);
 	}
 
@@ -955,7 +944,7 @@ public class BookshelfActivity extends Activity{
 		layoutInvisible();
 		setImageDrawable();
 		ImageButton btn=(ImageButton)v;
-		btn.setImageResource(R.drawable.btn_banquan_on);
+		btn.setImageResource(R.drawable.new_btn_banquan_on);
 		findViewById(R.id.banquanImg).setVisibility(View.VISIBLE);
 	}
 
@@ -982,7 +971,12 @@ public class BookshelfActivity extends Activity{
 	public void dingyueClick(View v){
 		setImageDrawable();
 		ImageButton btn=(ImageButton)v;
-		btn.setImageResource(R.drawable.btn_dignyue_on);
+		btn.setImageResource(R.drawable.btn_dingyue_on);
+	}
+	public void delClick(View v){
+		setImageDrawable();
+		ImageButton btn=(ImageButton)v;
+		btn.setImageResource(R.drawable.btn_delete_on);
 	}
 
 	public void openMagaine(final String magId,final String magName,final int index){
