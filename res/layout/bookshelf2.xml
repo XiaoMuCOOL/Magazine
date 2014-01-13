@@ -169,21 +169,34 @@
 		        </LinearLayout>
 		    </RelativeLayout> 
     
-		    <HorizontalScrollView 
+        	<!-- Horizontal -->
+        	<GridView 
+            android:id="@+id/scroll_layout2"
+            android:numColumns="4"
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:verticalSpacing="40dp"
+        	android:paddingLeft="20dp"
+        	android:paddingTop="20dp"
+        	android:paddingBottom="20dp"
+        	android:background="@drawable/new_bg_all"></GridView>
+		    <ScrollView 
 		        android:id="@+id/bottomScroll"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:fadingEdge="none"
 		        android:scrollbars="vertical"
+		        android:visibility="gone"
 		        android:layout_alignParentBottom="true">
 		        <LinearLayout 
 		            android:id="@+id/scroll_layout"
 		            android:orientation="horizontal"
 		            android:layout_gravity="top"
 		            android:layout_width="wrap_content"
+		            android:visibility="gone"
 		        	android:layout_height="wrap_content">
 		        </LinearLayout>
-		    </HorizontalScrollView>
+		    </ScrollView>
         </RelativeLayout>
         <FrameLayout 
             android:id="@+id/gerenFrameLayout"

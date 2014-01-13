@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+	 <ImageView 
+        android:layout_height="291dp" 
+        android:id="@+id/item_imageView"   
+        android:layout_width="223dp" 
+        android:layout_gravity="center"
+        android:src="@drawable/pic"></ImageView>   
+    <TextView 
+        android:text="2013年7月刊 总223期" 
+        android:id="@+id/item_textView"   
+        android:layout_width="wrap_content"  
+        android:textColor="#ffffff"  
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp" ></TextView>   
+   <ImageView 
+        android:layout_height="wrap_content" 
+        android:id="@+id/start_read"   
+        android:layout_width="wrap_content" 
+        android:src="@drawable/yuedu"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"></ImageView>  
+</LinearLayout>

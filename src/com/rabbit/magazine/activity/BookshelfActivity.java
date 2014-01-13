@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,26 +20,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.rabbit.magazine.AppConfigUtil;
-import com.rabbit.magazine.FavoriteInfo;
-import com.rabbit.magazine.GerenInfo;
-import com.rabbit.magazine.Magazineinfo;
-import com.rabbit.magazine.R;
-import com.rabbit.magazine.adapter.FavoriteAdapter;
-import com.rabbit.magazine.adapter.FlipperPagerAdapter;
-import com.rabbit.magazine.adapter.GerenGridAdapter;
-import com.rabbit.magazine.db.MagazineService;
-import com.rabbit.magazine.download.FileDownloader;
-import com.rabbit.magazine.kernel.Category;
-import com.rabbit.magazine.kernel.Magazine;
-import com.rabbit.magazine.kernel.Page;
-import com.rabbit.magazine.parser.MagazineReader;
-import com.rabbit.magazine.service.DownloadService;
-import com.rabbit.magazine.util.FrameUtil;
-import com.rabbit.magazine.util.ImageUtil;
-import com.rabbit.magazine.view.FlipperPageView2;
-import com.rabbit.magazine.view.PageView2;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -46,8 +27,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -65,8 +44,26 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.rabbit.magazine.AppConfigUtil;
+import com.rabbit.magazine.FavoriteInfo;
+import com.rabbit.magazine.GerenInfo;
+import com.rabbit.magazine.Magazineinfo;
+import com.rabbit.magazine.R;
+import com.rabbit.magazine.adapter.FavoriteAdapter;
+import com.rabbit.magazine.adapter.GerenGridAdapter;
+import com.rabbit.magazine.adapter.ImageAdapter;
+import com.rabbit.magazine.db.MagazineService;
+import com.rabbit.magazine.download.FileDownloader;
+import com.rabbit.magazine.kernel.Magazine;
+import com.rabbit.magazine.parser.MagazineReader;
+import com.rabbit.magazine.service.DownloadService;
+import com.rabbit.magazine.util.FrameUtil;
+import com.rabbit.magazine.util.ImageUtil;
 
 /**
  * 书架浏览
@@ -101,7 +98,10 @@ public class BookshelfActivity extends Activity{
 	
 	private LinearLayout scroll_layout;
 	
+	private GridView scroll_layout2;
+	
 	private boolean fromMagazineActivity=false;
+	private SimpleAdapter adapterSimple;
 	
 	private List<Object> objs=new ArrayList<Object>();
 	
@@ -147,6 +147,28 @@ public class BookshelfActivity extends Activity{
 					scroll_layout.addView(view);
 				}
 				setCurrentMag(0);
+				
+				scroll_layout2 = (GridView)findViewById(R.id.scroll_layout2);
+				ArrayList<HashMap<String, Object>> listItems = new ArrayList<HashMap<String, Object>>();
+		        for(int i=0; i < magList.size() ; i++){   
+		            HashMap<String, Object> map = new HashMap<String, Object>();   
+		            String path=AppConfigUtil.getCoverImgPath(String.valueOf(magList.get(i).getId()));
+		    		Bitmap bm=ImageUtil.loadImage(path);
+		            map.put("image", R.drawable.pic);
+		            map.put("title", magList.get(i).getTitle());   
+		            listItems.add(map);    
+		        }
+		        
+		        String[] from = {"image", "title"};
+		        //grid_item.xml中对应的ImageView控件和TextView控件   
+		        int[] to = {R.id.item_imageView, R.id.item_textView};   
+		        // 设定一个适配器   
+		        adapterSimple = new SimpleAdapter(BookshelfActivity.this, listItems, R.layout.item_bookshef2, from, to);   
+		   
+		        // 对GridView进行适配   
+		        Collections.reverse(magList);
+		        scroll_layout2.setAdapter(new ImageAdapter(BookshelfActivity.this,magList));   
+				
 				
 				MagazineService magService=new MagazineService(BookshelfActivity.this);
 				List<GerenInfo> gerenlist=magService.getAllGerens();
@@ -285,7 +307,7 @@ public class BookshelfActivity extends Activity{
 		dignyueBtnParams.height=frames[1];
 		
 		//BottomBar
-		HorizontalScrollView bottomScroll=(HorizontalScrollView)findViewById(R.id.bottomScroll);
+		ScrollView bottomScroll=(ScrollView)findViewById(R.id.bottomScroll);
 		bottomScroll.getLayoutParams();
 		LayoutParams bottomScrollParams=(LayoutParams)bottomScroll.getLayoutParams();
 		frames=FrameUtil.autoAdjust(new int[]{AppConfigUtil.WIDTH_ADJUST,211,0,35}, this);
@@ -1063,7 +1085,7 @@ public class BookshelfActivity extends Activity{
 		}
 		bottomLayout.removeAllViews();*/
 		
-		HorizontalScrollView bottomScroll=(HorizontalScrollView)findViewById(R.id.bottomScroll);
+		ScrollView bottomScroll=(ScrollView)findViewById(R.id.bottomScroll);
 		objs.add(bottomScroll);
 		/*Drawable  bottomDrawable=bottomScroll.getBackground();
 		if(bottomDrawable!=null){
