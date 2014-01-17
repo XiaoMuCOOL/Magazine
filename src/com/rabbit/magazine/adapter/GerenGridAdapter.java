@@ -51,7 +51,7 @@ public class GerenGridAdapter extends BaseAdapter{
 		if(convertView!=null){
 			view=convertView;
 		}else{
-			view=mActivity.getLayoutInflater().inflate(R.layout.item_bookshef, null);
+			view=mActivity.getLayoutInflater().inflate(R.layout.item_bookshef3, null);
 		}
 		final ImageView img=(ImageView) view.findViewById(R.id.img);
 		GerenInfo info=this.mList.get(position);

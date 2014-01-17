@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import org.xml.sax.XMLReader;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,7 +72,7 @@ import com.rabbit.magazine.util.ImageUtil;
  * @author litingwen
  * 
  */
-public class BookshelfActivity extends Activity{
+public class BookshelfActivity extends Activity {
 
 	// Forbes
 	//private static final String Server = "http://imag.nexdoor.cn/api/getmagazinedata.php?code=19&debugger=true";
@@ -141,20 +142,20 @@ public class BookshelfActivity extends Activity{
 				copyrightImg.setImageResource(R.drawable.information);
 				break;
 			case 2:
-				scroll_layout=(LinearLayout)findViewById(R.id.scroll_layout);
+				/*scroll_layout=(LinearLayout)findViewById(R.id.scroll_layout);
 				for(int i=0;i<magList.size();i++){
 					View view=createBottomScrollItem(magList.get(i),i);
 					scroll_layout.addView(view);
 				}
-				setCurrentMag(0);
+				setCurrentMag(0);*/
 				
 				scroll_layout2 = (GridView)findViewById(R.id.scroll_layout2);
-				ArrayList<HashMap<String, Object>> listItems = new ArrayList<HashMap<String, Object>>();
+				/*ArrayList<HashMap<String, Object>> listItems = new ArrayList<HashMap<String, Object>>();
 		        for(int i=0; i < magList.size() ; i++){   
 		            HashMap<String, Object> map = new HashMap<String, Object>();   
 		            String path=AppConfigUtil.getCoverImgPath(String.valueOf(magList.get(i).getId()));
 		    		Bitmap bm=ImageUtil.loadImage(path);
-		            map.put("image", R.drawable.pic);
+		            map.put("image", path);
 		            map.put("title", magList.get(i).getTitle());   
 		            listItems.add(map);    
 		        }
@@ -167,7 +168,18 @@ public class BookshelfActivity extends Activity{
 		   
 		        // 对GridView进行适配   
 		        Collections.reverse(magList);
-		        scroll_layout2.setAdapter(new ImageAdapter(BookshelfActivity.this,magList));   
+		        scroll_layout2.setAdapter(adapterSimple);*/
+
+		        //Collections.reverse(magList);
+		        scroll_layout2.setAdapter(new ImageAdapter(BookshelfActivity.this,magList,fromMagazineActivity));   
+		        //单击GridView元素的响应  
+		        /*scroll_layout2.setOnItemClickListener(new OnItemClickListener() {
+		            @Override  
+		            public void onItemClick(AdapterView<?> parent, View view,  
+		                    int position, long id) {  
+		            	openMagaine(String.valueOf(magList.get(position).getId()),magList.get(position).getTitle(),0);
+		            }  
+		        });*/ 
 				
 				
 				MagazineService magService=new MagazineService(BookshelfActivity.this);
@@ -379,7 +391,7 @@ public class BookshelfActivity extends Activity{
 	}
 	
 	private View createBottomScrollItem(final Magazineinfo mag,int index){
-		View view=this.getLayoutInflater().inflate(R.layout.item_bookshef, null);
+		/*View view=this.getLayoutInflater().inflate(R.layout.item_bookshef, null);
 		android.widget.LinearLayout.LayoutParams vParams=new android.widget.LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
 		int[] layoutFrames=FrameUtil.autoAdjust(new int[]{20,-100,10,-100}, this);
 		vParams.setMargins(layoutFrames[0], 0, layoutFrames[0], 0);
@@ -445,7 +457,7 @@ public class BookshelfActivity extends Activity{
 					Toast.makeText(BookshelfActivity.this, "当前有杂志正在下载，请耐心等待...", Toast.LENGTH_SHORT).show();
 				}else{
 					Integer index=(Integer) v.getTag();
-					downloadMag(index);
+					downloadMag(index,null);
 				}
 			}
 		});
@@ -498,16 +510,20 @@ public class BookshelfActivity extends Activity{
 				unzipTv.setVisibility(View.GONE);
 			}
 		}
-		return view;
+		return view;*/
+		return null;
 	}
 	
-	private void downloadMag(final int magIndex) {
+	public void downloadMag(final int magIndex,Context packageContext) {
+		if(packageContext ==null){
+			packageContext = BookshelfActivity.this;
+		}
 		boolean isConnected=((ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE)).getActiveNetworkInfo().isConnected();
 		if(!isConnected){
 			Toast.makeText(this, "请检查网络连接", Toast.LENGTH_LONG).show();
 			return;
 		}  
-		LinearLayout layout=(LinearLayout)findViewById(R.id.scroll_layout);
+		GridView layout=(GridView)findViewById(R.id.scroll_layout2);
 		LinearLayout itemLayout=(LinearLayout) layout.getChildAt(magIndex);
 		
 		ProgressBar progressBar=(ProgressBar) itemLayout.findViewById(R.id.progress);
@@ -569,10 +585,9 @@ public class BookshelfActivity extends Activity{
 			}
 			break;
 		}
-		
 		String magid=mag.getId();
 		String zipUrl=mag.getZip_url();
-		Intent intent=new Intent(BookshelfActivity.this,DownloadService.class);
+		Intent intent=new Intent(packageContext,DownloadService.class);
 		intent.putExtra("position", magIndex);
 		intent.putExtra("zipUrl", zipUrl);
 		intent.putExtra("magid", magid);
@@ -583,12 +598,15 @@ public class BookshelfActivity extends Activity{
 	}
 	
 	public void update(int code,int progress,String desc,int position,String error){
-		LinearLayout layout=(LinearLayout)findViewById(R.id.scroll_layout);
-		LinearLayout itemLayout=(LinearLayout) layout.getChildAt(position);
+		GridView layout=(GridView)findViewById(R.id.scroll_layout2);
+		LinearLayout itemLayout2=(LinearLayout) layout.getChildAt(position);
+		LinearLayout itemLayout=(LinearLayout) itemLayout2.getChildAt(position);
 		if(itemLayout==null){
 			return;
 		}
 		ProgressBar progressBar=(ProgressBar) itemLayout.findViewById(R.id.progress);
+		TextView t =(TextView) itemLayout.findViewById(R.id.item_textView);
+		t.setText("Upate+1111111111111111");
 		TextView unzipTv=(TextView)itemLayout.findViewById(R.id.unzip);
 		Button readingBtn=(Button)itemLayout.findViewById(R.id.reading);
 		Button previewBtn=(Button)itemLayout.findViewById(R.id.preview);
@@ -918,7 +936,7 @@ public class BookshelfActivity extends Activity{
 			ProgressBar rightProgressBar=(ProgressBar)findViewById(R.id.rightProgress);
 			rightProgressBar.setVisibility(View.VISIBLE);
 			Integer magIndex=(Integer) v.getTag();
-			downloadMag(magIndex);
+			downloadMag(magIndex,null);
 			
 	}
 
@@ -1049,7 +1067,8 @@ public class BookshelfActivity extends Activity{
 				if(result==null){
 					AppConfigUtil.MAGAZINE_ID=magId;
 					AppConfigUtil.MAGAZINE_TITLE=magName;
-					collectResource();
+					//这里 是有可能 报错的地方！！！
+					//collectResource();
 					MagazineActivity.excute(BookshelfActivity.this, objs, index,magazine);
 					dialog.dismiss();
 				}else{
@@ -1064,7 +1083,7 @@ public class BookshelfActivity extends Activity{
 	private void collectResource(){
 		ImageView coverImg=(ImageView) findViewById(R.id.cover);
 		//ImageUtil.recycle(coverImg);
-		objs.add(objs);
+		objs.add(coverImg);
 		
 		LinearLayout preLayout=(LinearLayout)findViewById(R.id.previews);
 		objs.add(preLayout);
