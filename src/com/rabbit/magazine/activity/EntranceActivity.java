@@ -38,7 +38,7 @@ public class EntranceActivity extends Activity {
 	
 	//private static  String Server = "http://imag.nexdoor.cn/api/getmagazinedata.php?code=12&debugger=true";
 	
-	//private static  String Server = "http://imag.nexdoor.cn/api/getmagazinedata.php?code=12&debugger=0";
+	//private static  String Server = "http://imag.nexdoor.cn/api/getmagazinedata.php?code=12&debugger=1";
 	
 	private File appDir;
 	

@@ -55,7 +55,7 @@ public class FavoriteAdapter extends BaseAdapter{
 		Bitmap bm=ImageUtil.loadImage(info.getImgPath());
 		imgView.setImageBitmap(bm);
 		imgView.setTag(info);
-		int[] imgParams=FrameUtil.autoAdjust(new int[]{110,138}, mActivity);
+		int[] imgParams=FrameUtil.autoAdjust(new int[]{223,167}, mActivity);
 		imgView.setLayoutParams(new android.widget.LinearLayout.LayoutParams(imgParams[0],imgParams[1]));
 		imgView.setOnClickListener(new OnClickListener() {
 			@Override
@@ -70,7 +70,14 @@ public class FavoriteAdapter extends BaseAdapter{
 		
 		
 		TextView descTv=(TextView)view.findViewById(R.id.desc);
-		descTv.setText(info.getTitle()+"("+(info.getIndex()+1)+"/"+info.getPageSize()+")");
+		String newTitle = info.getTitle();
+		if(newTitle.length()>6){
+			newTitle = newTitle.substring(0, 6) + " ... ";
+		}else{
+			newTitle = newTitle + "　";
+		}
+		descTv.setText(newTitle+" "+(info.getIndex()+1)+"/"+info.getPageSize()+" 页");
+		//descTv.setText("2013年1... 1/29 页 ");
 		
 		Button delBtn=(Button)view.findViewById(R.id.del);
 		delBtn.setTag(info);

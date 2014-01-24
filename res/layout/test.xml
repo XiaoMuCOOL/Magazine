@@ -7,12 +7,12 @@
         android:id="@+id/b1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="code=15"/>
+        android:text="code=15debugger=true"/>
     <Button 
         android:id="@+id/b2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="code=12"/>
+        android:text="code=12debugger=true"/>
     
     <Button 
         android:id="@+id/b3"

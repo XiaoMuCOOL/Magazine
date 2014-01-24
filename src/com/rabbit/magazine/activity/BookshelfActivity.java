@@ -26,13 +26,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,6 +63,7 @@ import com.rabbit.magazine.parser.MagazineReader;
 import com.rabbit.magazine.service.DownloadService;
 import com.rabbit.magazine.util.FrameUtil;
 import com.rabbit.magazine.util.ImageUtil;
+import com.rabbit.magazine.view.ProgressView;
 
 /**
  * 书架浏览
@@ -101,8 +100,13 @@ public class BookshelfActivity extends Activity {
 	
 	private GridView scroll_layout2;
 	
+	private ImageView del_pre;
+	
+	public boolean isDel = false;
+	
 	private boolean fromMagazineActivity=false;
 	private SimpleAdapter adapterSimple;
+	
 	
 	private List<Object> objs=new ArrayList<Object>();
 	
@@ -119,8 +123,8 @@ public class BookshelfActivity extends Activity {
 				ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
 				listImgBtn.setImageResource(R.drawable.new_btn_list_on);
 				
-				ImageButton dingyueImgBtn=(ImageButton)findViewById(R.id.btn_dingyue);
-				dingyueImgBtn.setImageResource(R.drawable.btn_dingyue_off);
+//				ImageButton dingyueImgBtn=(ImageButton)findViewById(R.id.btn_dingyue);
+//				dingyueImgBtn.setImageResource(R.drawable.btn_dingyue_off);
 				
 				ImageButton gerenImgBtn=(ImageButton)findViewById(R.id.btn_geren);
 				gerenImgBtn.setImageResource(R.drawable.new_btn_geren_off);
@@ -181,16 +185,18 @@ public class BookshelfActivity extends Activity {
 		            }  
 		        });*/ 
 				
-				
+		        setCurrentMag(5);
 				MagazineService magService=new MagazineService(BookshelfActivity.this);
+				
+				List<FavoriteInfo> favoritelist=magService.getAllFavorites();
+				favoriteAdapter=new FavoriteAdapter(BookshelfActivity.this,favoritelist);
+				favoriteGrid.setAdapter(favoriteAdapter);
+				
 				List<GerenInfo> gerenlist=magService.getAllGerens();
 				gerenAdapter=new GerenGridAdapter(BookshelfActivity.this,gerenlist);
 				gerenGrid.setAdapter(gerenAdapter);
 				
 				
-				List<FavoriteInfo> favoritelist=magService.getAllFavorites();
-				favoriteAdapter=new FavoriteAdapter(BookshelfActivity.this,favoritelist);
-				favoriteGrid.setAdapter(favoriteAdapter);
 				break;
 			}
 		};
@@ -209,12 +215,22 @@ public class BookshelfActivity extends Activity {
 		favoriteGrid=(GridView)findViewById(R.id.shuqianGrid);
 		RelativeLayout bgLayout=(RelativeLayout)findViewById(R.id.bg);
 		bgLayout.setBackgroundResource(R.drawable.new_bg_all);
-		
+		del_pre = (ImageView)findViewById(R.id.del_pre);
+		final RelativeLayout relative = (RelativeLayout)findViewById(R.id.curMagLayout);
+		del_pre.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				relative.setVisibility(View.GONE);
+			}
+		});
 		Button rightDownloadBtn=(Button)findViewById(R.id.rightDownloadBtn);
 		rightDownloadBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				rightDownload(v);
+				//rightDownload(v);
+				relative.setVisibility(View.GONE);
+				Integer index = (Integer)v.getTag();
+				downloadMag(index,BookshelfActivity.this);
 			}
 		});
 		Button rightReadBtn=(Button)findViewById(R.id.rightReadBtn);
@@ -277,14 +293,14 @@ public class BookshelfActivity extends Activity {
 		
 		ImageButton listBtn=(ImageButton)topLayout.findViewById(R.id.list);
 		LayoutParams listBtnParams=(LayoutParams) listBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{30,0,34,34}, this);
+		frames=FrameUtil.autoAdjust(new int[]{30,0,30,50}, this);
 		listBtnParams.width=frames[2];
 		listBtnParams.height=frames[3];
 		//listBtnParams.setMargins(frames[0], frames[1], 0, 0);
 		
 		ImageButton gerenBtn=(ImageButton)topLayout.findViewById(R.id.btn_geren);
 		LayoutParams gerenBtnParams=(LayoutParams) gerenBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{27,23}, this);
+		frames=FrameUtil.autoAdjust(new int[]{40,50}, this);
 		gerenBtnParams.width=frames[0];
 		gerenBtnParams.height=frames[1];
 		
@@ -296,7 +312,7 @@ public class BookshelfActivity extends Activity {
 		
 		ImageButton banquanBtn=(ImageButton)topLayout.findViewById(R.id.btn_banquan);
 		LayoutParams banquanBtnParams=(LayoutParams) banquanBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{13,27}, this);
+		frames=FrameUtil.autoAdjust(new int[]{13,50}, this);
 		banquanBtnParams.width=frames[0];
 		banquanBtnParams.height=frames[1];
 		
@@ -308,29 +324,29 @@ public class BookshelfActivity extends Activity {
 		
 		ImageButton fenxiangBtn=(ImageButton)topLayout.findViewById(R.id.btn_del);
 		LayoutParams fenxiangBtnParams=(LayoutParams) fenxiangBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{20,23}, this);
+		frames=FrameUtil.autoAdjust(new int[]{40,50}, this);
 		fenxiangBtnParams.width=frames[0];
 		fenxiangBtnParams.height=frames[1];
 		
-		ImageButton dignyueBtn=(ImageButton)topLayout.findViewById(R.id.btn_dingyue);
-		LayoutParams dignyueBtnParams=(LayoutParams) dignyueBtn.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{20,31}, this);
-		dignyueBtnParams.width=frames[0];
-		dignyueBtnParams.height=frames[1];
+//		ImageButton dignyueBtn=(ImageButton)topLayout.findViewById(R.id.btn_dingyue);
+//		LayoutParams dignyueBtnParams=(LayoutParams) dignyueBtn.getLayoutParams();
+//		frames=FrameUtil.autoAdjust(new int[]{20,31}, this);
+//		dignyueBtnParams.width=frames[0];
+//		dignyueBtnParams.height=frames[1];
 		
 		//BottomBar
-		ScrollView bottomScroll=(ScrollView)findViewById(R.id.bottomScroll);
-		bottomScroll.getLayoutParams();
-		LayoutParams bottomScrollParams=(LayoutParams)bottomScroll.getLayoutParams();
-		frames=FrameUtil.autoAdjust(new int[]{AppConfigUtil.WIDTH_ADJUST,211,0,35}, this);
-		bottomScroll.setPadding(0, frames[3], 0, 0);
-		bottomScrollParams.height=730;//frames[1];
+//		ScrollView bottomScroll=(ScrollView)findViewById(R.id.bottomScroll);
+//		bottomScroll.getLayoutParams();
+//		LayoutParams bottomScrollParams=(LayoutParams)bottomScroll.getLayoutParams();
+//		frames=FrameUtil.autoAdjust(new int[]{AppConfigUtil.WIDTH_ADJUST,211,0,35}, this);
+//		bottomScroll.setPadding(0, frames[3], 0, 0);
+//		bottomScrollParams.height=730;//frames[1];
 		
-		LinearLayout bottomLayout=(LinearLayout)findViewById(R.id.scroll_layout);
-		android.widget.FrameLayout.LayoutParams bottomLayoutParams=(android.widget.FrameLayout.LayoutParams) bottomLayout.getLayoutParams();
-		int[] btmLayoutFrames=FrameUtil.autoAdjust(new int[]{-100,138,-100,30}, this);
-		bottomLayoutParams.height=btmLayoutFrames[1];
-		bottomLayoutParams.setMargins(0, 0, 0, btmLayoutFrames[3]);
+//		LinearLayout bottomLayout=(LinearLayout)findViewById(R.id.scroll_layout);
+//		android.widget.FrameLayout.LayoutParams bottomLayoutParams=(android.widget.FrameLayout.LayoutParams) bottomLayout.getLayoutParams();
+//		int[] btmLayoutFrames=FrameUtil.autoAdjust(new int[]{-100,138,-100,30}, this);
+//		bottomLayoutParams.height=btmLayoutFrames[1];
+//		bottomLayoutParams.setMargins(0, 0, 0, btmLayoutFrames[3]);
 		
 		//MiddleBar
 		RelativeLayout curMagLayout=(RelativeLayout)findViewById(R.id.curMagLayout);
@@ -339,27 +355,27 @@ public class BookshelfActivity extends Activity {
 		curMagParams.setMargins(0, curMagFrames[1], 0, 0);
 		curMagLayout.bringToFront();
 		
-		ImageView coverImg=(ImageView)findViewById(R.id.cover);
-		LayoutParams coverParams=(LayoutParams) coverImg.getLayoutParams();
-		int[] coverFrames=FrameUtil.autoAdjust(new int[]{100,-100,323,392}, this);
-		coverParams.width=coverFrames[2];
-		coverParams.height=coverFrames[3];
-		coverParams.setMargins(coverFrames[0], 0, 0, 0);
+//		ImageView coverImg=(ImageView)findViewById(R.id.cover);
+//		LayoutParams coverParams=(LayoutParams) coverImg.getLayoutParams();
+//		int[] coverFrames=FrameUtil.autoAdjust(new int[]{100,-100,323,392}, this);
+//		coverParams.width=coverFrames[2];
+//		coverParams.height=coverFrames[3];
+//		coverParams.setMargins(coverFrames[0], 0, 0, 0);
 		
 		LinearLayout rightLayout=(LinearLayout)findViewById(R.id.rightLayout);
 		LayoutParams rightParams=(LayoutParams) rightLayout.getLayoutParams();
 		int[] marge_right=FrameUtil.autoAdjust(new int[]{30},this);
 		rightParams.setMargins(0, 0, marge_right[0], 0);
 		
-		TextView descTv=(TextView)findViewById(R.id.description);
-		android.widget.LinearLayout.LayoutParams descParams=(android.widget.LinearLayout.LayoutParams)descTv.getLayoutParams();
-		int[] descFrames=FrameUtil.autoAdjust(new int[]{-100,50,-100,20}, this);
-		descParams.height=descFrames[1];
-		descParams.setMargins(0, descFrames[3], 0, 0);
+//		TextView descTv=(TextView)findViewById(R.id.description);
+//		android.widget.LinearLayout.LayoutParams descParams=(android.widget.LinearLayout.LayoutParams)descTv.getLayoutParams();
+//		int[] descFrames=FrameUtil.autoAdjust(new int[]{-100,50,-100,20}, this);
+//		descParams.height=descFrames[1];
+//		descParams.setMargins(0, descFrames[3], 0, 0);
 		
 		HorizontalScrollView preScroll=(HorizontalScrollView)findViewById(R.id.preScroll);
 		android.widget.LinearLayout.LayoutParams preScrollParams=(android.widget.LinearLayout.LayoutParams)preScroll.getLayoutParams();
-		int[] preScrollFrames=FrameUtil.autoAdjust(new int[]{540,200,-100,20}, this);
+		int[] preScrollFrames=FrameUtil.autoAdjust(new int[]{859,400,-500,100}, this);
 		preScrollParams.width=preScrollFrames[0];
 		preScrollParams.height=preScrollFrames[1];
 		preScrollParams.setMargins(0, preScrollFrames[3], 0, 0);
@@ -383,10 +399,10 @@ public class BookshelfActivity extends Activity {
 		gerenGrid.setVerticalSpacing(vertFrames[1]);
 		
 		GridView shuqianGrid=(GridView)findViewById(R.id.shuqianGrid);
-		android.widget.FrameLayout.LayoutParams shuqianParams=(android.widget.FrameLayout.LayoutParams) shuqianGrid.getLayoutParams();
-		int[] shuqianFrames=FrameUtil.autoAdjust(new int[]{800,30}, this);
-		shuqianParams.width=shuqianFrames[0];
-		shuqianGrid.setVerticalSpacing(shuqianFrames[1]);
+//		android.widget.FrameLayout.LayoutParams shuqianParams=(android.widget.FrameLayout.LayoutParams) shuqianGrid.getLayoutParams();
+//		int[] shuqianFrames=FrameUtil.autoAdjust(new int[]{800,30}, this);
+//		shuqianParams.width=shuqianFrames[0];
+//		shuqianGrid.setVerticalSpacing(shuqianFrames[1]);
 		
 	}
 	
@@ -524,12 +540,13 @@ public class BookshelfActivity extends Activity {
 			return;
 		}  
 		GridView layout=(GridView)findViewById(R.id.scroll_layout2);
-		LinearLayout itemLayout=(LinearLayout) layout.getChildAt(magIndex);
+		LinearLayout itemLayout=(LinearLayout) layout.getChildAt(magIndex - layout.getFirstVisiblePosition());
 		
-		ProgressBar progressBar=(ProgressBar) itemLayout.findViewById(R.id.progress);
+		//ProgressBar progressBar=(ProgressBar) itemLayout.findViewById(R.id.progress);
+		ProgressView progressBar2=(ProgressView) itemLayout.findViewById(R.id.pro2);
 		Button downloadBtn=(Button)itemLayout.findViewById(R.id.download);
 		Button readingBtn=(Button)itemLayout.findViewById(R.id.reading);
-		Button previewBtn=(Button)itemLayout.findViewById(R.id.preview);
+		//Button previewBtn=(Button)itemLayout.findViewById(R.id.preview);
 		TextView unzipTv=(TextView)itemLayout.findViewById(R.id.unzip);
 		
 		Magazineinfo mag=magList.get(magIndex);
@@ -537,51 +554,54 @@ public class BookshelfActivity extends Activity {
 		switch(status){
 		case 0:
 		case 1:
-			progressBar.setVisibility(View.VISIBLE);
+			//progressBar.setVisibility(View.VISIBLE);
+			progressBar2.setVisibility(View.VISIBLE);
 			downloadBtn.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.GONE);
+			//previewBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.VISIBLE);
 			unzipTv.setText("下载...");
-			progressBar.setIndeterminate(false);
+			//progressBar.setIndeterminate(false);
 			if(BookshelfActivity.this.curMagIndex==magIndex){
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.VISIBLE);
-				rightProgressBar.setIndeterminate(false);
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.VISIBLE);
+//				rightProgressBar.setIndeterminate(false);
 			}
 			break;
 		case 2:
-			progressBar.setVisibility(View.VISIBLE);
-			progressBar.setIndeterminate(true);
+			//progressBar.setVisibility(View.VISIBLE);
+			progressBar2.setVisibility(View.VISIBLE);
+			//progressBar.setIndeterminate(true);
 			downloadBtn.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.GONE);
+			//previewBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.VISIBLE);
 			unzipTv.setText("解压...");
 			if(BookshelfActivity.this.curMagIndex==magIndex){
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.VISIBLE);
-				rightProgressBar.setIndeterminate(true);
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.VISIBLE);
+//				rightProgressBar.setIndeterminate(true);
 			}
 			break;
 		case 3:
-			progressBar.setVisibility(View.VISIBLE);
-			progressBar.setIndeterminate(true);
+			progressBar2.setVisibility(View.VISIBLE);
+//			progressBar.setVisibility(View.VISIBLE);
+//			progressBar.setIndeterminate(true);
 			downloadBtn.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.GONE);
+			//previewBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.VISIBLE);
 			unzipTv.setText("生成缩略图...");
 			if(BookshelfActivity.this.curMagIndex==magIndex){
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.VISIBLE);
-				rightProgressBar.setIndeterminate(true);
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.VISIBLE);
+//				rightProgressBar.setIndeterminate(true);
 			}
 			break;
 		}
@@ -599,97 +619,108 @@ public class BookshelfActivity extends Activity {
 	
 	public void update(int code,int progress,String desc,int position,String error){
 		GridView layout=(GridView)findViewById(R.id.scroll_layout2);
-		LinearLayout itemLayout2=(LinearLayout) layout.getChildAt(position);
-		LinearLayout itemLayout=(LinearLayout) itemLayout2.getChildAt(position);
+		LinearLayout itemLayout=(LinearLayout) layout.getChildAt(position - layout.getFirstVisiblePosition());
 		if(itemLayout==null){
 			return;
 		}
-		ProgressBar progressBar=(ProgressBar) itemLayout.findViewById(R.id.progress);
+
 		TextView t =(TextView) itemLayout.findViewById(R.id.item_textView);
-		t.setText("Upate+1111111111111111");
+		Magazineinfo mag=magList.get(position);
+		String txt = mag.getTitle() + " ID:" + mag.getId() + " \r\n position:" + position;
+		if(!t.getText().equals(txt)){
+			return;
+		}
+		//ProgressBar progressBar=(ProgressBar) itemLayout.findViewById(R.id.progress);
+		ProgressView progressBar2 = (ProgressView)itemLayout.findViewById(R.id.pro2);
 		TextView unzipTv=(TextView)itemLayout.findViewById(R.id.unzip);
 		Button readingBtn=(Button)itemLayout.findViewById(R.id.reading);
-		Button previewBtn=(Button)itemLayout.findViewById(R.id.preview);
+		//Button previewBtn=(Button)itemLayout.findViewById(R.id.preview);
 		Button downloadBtn=(Button)itemLayout.findViewById(R.id.download);
-		Magazineinfo mag=magList.get(position);
+		t.setText(txt);
+		
 		switch(code){
 		case 0:
 			mag.setStatus(1);
-			progressBar.setVisibility(View.VISIBLE);
+			//progressBar.setVisibility(View.VISIBLE);
+			progressBar2.setVisibility(View.VISIBLE);
 			downloadBtn.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.GONE);
+			//previewBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.VISIBLE);
-			progressBar.setIndeterminate(false);
+			//progressBar.setIndeterminate(false);
 			if(BookshelfActivity.this.curMagIndex==position){
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.VISIBLE);
-				rightProgressBar.setIndeterminate(false);
-				BookshelfActivity.this.findViewById(R.id.rightTextView).setVisibility(View.VISIBLE);
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.VISIBLE);
+//				rightProgressBar.setIndeterminate(false);
+//				BookshelfActivity.this.findViewById(R.id.rightTextView).setVisibility(View.VISIBLE);
 			}
 			break;
 		case 1:
 			mag.setStatus(1);
-			progressBar.setVisibility(View.VISIBLE);
+			//progressBar.setVisibility(View.VISIBLE);
+			progressBar2.setVisibility(View.VISIBLE);
 			downloadBtn.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.GONE);
+			//previewBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.VISIBLE);
-			progressBar.setIndeterminate(false);
-			progressBar.setProgress(progress);
+//			progressBar.setIndeterminate(false);
+//			progressBar.setProgress(progress);
+			progressBar2.setProgress(progress);
 			unzipTv.setText(desc);
 			if(BookshelfActivity.this.curMagIndex==position){
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.VISIBLE);
-				rightProgressBar.setIndeterminate(false);
-				rightProgressBar.setProgress(progress);
-				TextView tv=(TextView) BookshelfActivity.this.findViewById(R.id.rightTextView);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(desc);
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.VISIBLE);
+//				rightProgressBar.setIndeterminate(false);
+//				rightProgressBar.setProgress(progress);
+//				TextView tv=(TextView) BookshelfActivity.this.findViewById(R.id.rightTextView);
+//				tv.setVisibility(View.VISIBLE);
+//				tv.setText(desc);
 			}
 			break;
 		case 2:
 			mag.setStatus(2);
-			progressBar.setVisibility(View.VISIBLE);
+			//progressBar.setVisibility(View.VISIBLE);
+			progressBar2.setVisibility(View.VISIBLE);
 			downloadBtn.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.GONE);
+			//previewBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.VISIBLE);
-			progressBar.setIndeterminate(true);
+			//progressBar.setIndeterminate(true);
 			unzipTv.setText("解压...");
 			if(BookshelfActivity.this.curMagIndex==position){
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.VISIBLE);
-				rightProgressBar.setIndeterminate(true);
-				TextView tv=(TextView) BookshelfActivity.this.findViewById(R.id.rightTextView);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText("解压...");
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.VISIBLE);
+//				rightProgressBar.setIndeterminate(true);
+//				TextView tv=(TextView) BookshelfActivity.this.findViewById(R.id.rightTextView);
+//				tv.setVisibility(View.VISIBLE);
+//				tv.setText("解压...");
 			}
 			break;
 		case 3:
 			mag.setStatus(3);
-			progressBar.setVisibility(View.VISIBLE);
+			//progressBar.setVisibility(View.VISIBLE);
+			progressBar2.setVisibility(View.VISIBLE);
 			downloadBtn.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.GONE);
+			//previewBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.VISIBLE);
-			progressBar.setIndeterminate(true);
+			//progressBar.setIndeterminate(true);
 			unzipTv.setText("生成缩略图...");
 			if(BookshelfActivity.this.curMagIndex==position){
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.VISIBLE);
-				rightProgressBar.setIndeterminate(true);
-				TextView tv=(TextView) BookshelfActivity.this.findViewById(R.id.rightTextView);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText("生成缩略图...");
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.VISIBLE);
+//				rightProgressBar.setIndeterminate(true);
+//				TextView tv=(TextView) BookshelfActivity.this.findViewById(R.id.rightTextView);
+//				tv.setVisibility(View.VISIBLE);
+//				tv.setText("生成缩略图...");
 			}
 			break;
 		case 4:
@@ -705,26 +736,28 @@ public class BookshelfActivity extends Activity {
 			
 			downloadBtn.setVisibility(View.GONE);
 			unzipTv.setVisibility(View.GONE);
-			progressBar.setVisibility(View.GONE);
+			//progressBar.setVisibility(View.GONE);
+			progressBar2.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.VISIBLE);
-			previewBtn.setVisibility(View.VISIBLE);
+			//previewBtn.setVisibility(View.VISIBLE);
 			if(BookshelfActivity.this.curMagIndex==position){
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.GONE);
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.VISIBLE);
-				BookshelfActivity.this.findViewById(R.id.rightTextView).setVisibility(View.GONE);
+//				BookshelfActivity.this.findViewById(R.id.rightTextView).setVisibility(View.GONE);
 			}
 			break;
 		case 5:
 			downloadBtn.setVisibility(View.VISIBLE);
 			unzipTv.setVisibility(View.GONE);
-			progressBar.setVisibility(View.GONE);
+			//progressBar.setVisibility(View.GONE);
+			progressBar2.setVisibility(View.GONE);
 			readingBtn.setVisibility(View.GONE);
-			previewBtn.setVisibility(View.VISIBLE);
+			//previewBtn.setVisibility(View.VISIBLE);
 			if(BookshelfActivity.this.curMagIndex==position){
-				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
-				rightProgressBar.setVisibility(View.GONE);
+//				ProgressBar rightProgressBar=(ProgressBar) BookshelfActivity.this.findViewById(R.id.rightProgress);
+//				rightProgressBar.setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightDownloadBtn).setVisibility(View.VISIBLE);
 				BookshelfActivity.this.findViewById(R.id.rightReadBtn).setVisibility(View.GONE);
 				BookshelfActivity.this.findViewById(R.id.rightTextView).setVisibility(View.GONE);
@@ -735,64 +768,64 @@ public class BookshelfActivity extends Activity {
 		}
 	}
 
-	private void setCurrentMag(int curMag){
+	public void setCurrentMag(int curMag){
 		Magazineinfo info=magList.get(curMag);
 		String magid=info.getId();
-		Button rightDownloadBtn=(Button)findViewById(R.id.rightDownloadBtn);
-		Button rightReadBtn=(Button)findViewById(R.id.rightReadBtn);
-		ProgressBar rightProgressBar=(ProgressBar)findViewById(R.id.rightProgress);
-		TextView rightTextView=(TextView)findViewById(R.id.rightTextView);
+//		Button rightDownloadBtn=(Button)findViewById(R.id.rightDownloadBtn);
+//		Button rightReadBtn=(Button)findViewById(R.id.rightReadBtn);
+		//ProgressBar rightProgressBar=(ProgressBar)findViewById(R.id.rightProgress);
+//		TextView rightTextView=(TextView)findViewById(R.id.rightTextView);
 		
-		LinearLayout layout2=(LinearLayout) scroll_layout.getChildAt(curMag);
-		if(layout2.findViewById(R.id.download).getVisibility()==View.VISIBLE){
-			rightDownloadBtn.setVisibility(View.VISIBLE);
-		}else{
-			rightDownloadBtn.setVisibility(View.GONE);
-		}
-		if(layout2.findViewById(R.id.reading).getVisibility()==View.VISIBLE){
-			rightReadBtn.setVisibility(View.VISIBLE);
-		}else{
-			rightReadBtn.setVisibility(View.GONE);
-		}
-		if(layout2.findViewById(R.id.progress).getVisibility()==View.VISIBLE){
-			rightProgressBar.setVisibility(View.VISIBLE);
-			ProgressBar pbBar=(ProgressBar)layout2.findViewById(R.id.progress);
-			if(pbBar.isIndeterminate()){
-				rightProgressBar.setIndeterminate(true);
-			}else{
-				rightProgressBar.setIndeterminate(false);
-			}
-		}else{
-			rightProgressBar.setVisibility(View.GONE);
-		}
-		TextView unzipTv=(TextView)layout2.findViewById(R.id.unzip);
-		if(unzipTv.getVisibility()==View.VISIBLE){
-			rightTextView.setVisibility(View.VISIBLE);
-			rightTextView.setText(unzipTv.getText());
-		}else{
-			rightTextView.setVisibility(View.GONE);
-		}
+//		LinearLayout layout2=(LinearLayout) scroll_layout2.getChildAt(curMag);
+//		if(layout2.findViewById(R.id.download).getVisibility()==View.VISIBLE){
+//			//rightDownloadBtn.setVisibility(View.VISIBLE);
+//		}else{
+//			//rightDownloadBtn.setVisibility(View.GONE);
+//		}
+//		if(layout2.findViewById(R.id.reading).getVisibility()==View.VISIBLE){
+//			//rightReadBtn.setVisibility(View.VISIBLE);
+//		}else{
+//			//rightReadBtn.setVisibility(View.GONE);
+//		}
+//		if(layout2.findViewById(R.id.progress).getVisibility()==View.VISIBLE){
+//			rightProgressBar.setVisibility(View.VISIBLE);
+//			ProgressBar pbBar=(ProgressBar)layout2.findViewById(R.id.progress);
+//			if(pbBar.isIndeterminate()){
+//				rightProgressBar.setIndeterminate(true);
+//			}else{
+//				rightProgressBar.setIndeterminate(false);
+//			}
+//		}else{
+//			//rightProgressBar.setVisibility(View.GONE);
+//		}
+//		TextView unzipTv=(TextView)layout2.findViewById(R.id.unzip);
+//		if(unzipTv.getVisibility()==View.VISIBLE){
+//			rightTextView.setVisibility(View.VISIBLE);
+//			rightTextView.setText(unzipTv.getText());
+//		}else{
+//			rightTextView.setVisibility(View.GONE);
+//		}
 		
 		curMagIndex=curMag;
 		String title=info.getTitle();
 		String price=info.getIosprice();
-		String coverPath=AppConfigUtil.getCoverImgPath(String.valueOf(magid));
-		Bitmap coverBm=ImageUtil.loadImage(coverPath);
-		ImageView coverImg=(ImageView)findViewById(R.id.cover);
-		ImageUtil.recycle(coverImg);
-		coverImg.setImageBitmap(coverBm);
+//		String coverPath=AppConfigUtil.getCoverImgPath(String.valueOf(magid));
+//		Bitmap coverBm=ImageUtil.loadImage(coverPath);
+//		ImageView coverImg=(ImageView)findViewById(R.id.cover);
+//		ImageUtil.recycle(coverImg);
+//		coverImg.setImageBitmap(coverBm);
 		
-		rightDownloadBtn.setTag(curMagIndex);
+		//rightDownloadBtn.setTag(curMagIndex);
 		
 		TextView titleTv=(TextView)findViewById(R.id.cur_title);
 		titleTv.setText(title);
 		
-		TextView priceTv=(TextView)findViewById(R.id.cur_price);
-		priceTv.setText("售价:"+price);
+//		TextView priceTv=(TextView)findViewById(R.id.cur_price);
+//		priceTv.setText("售价:"+price);
 		
-		String desc=info.getDescription();
-		TextView descTv=(TextView)findViewById(R.id.description);
-		descTv.setText(desc);
+//		String desc=info.getDescription();
+//		TextView descTv=(TextView)findViewById(R.id.description);
+//		descTv.setText(desc);
 		
 		
 		LinearLayout layout=(LinearLayout)findViewById(R.id.previews);
@@ -917,9 +950,9 @@ public class BookshelfActivity extends Activity {
 		Bitmap previewBm=ImageUtil.loadImage(previewPath);
 		ImageView previewImg=new ImageView(this);
 		previewImg.setImageBitmap(previewBm);
-		int[] imgFrames=FrameUtil.autoAdjust(new int[]{260,195}, this);
+		int[] imgFrames=FrameUtil.autoAdjust(new int[]{534,400}, this);
 		android.widget.LinearLayout.LayoutParams imgparams=new android.widget.LinearLayout.LayoutParams(imgFrames[0],imgFrames[1]);
-		imgparams.setMargins(20, 0, 20, 0);
+		imgparams.setMargins(162, 0, 163, 0);
 		previewImg.setLayoutParams(imgparams);
 		return previewImg;
 	}
@@ -929,12 +962,12 @@ public class BookshelfActivity extends Activity {
 				Toast.makeText(BookshelfActivity.this, "当前有杂志正在下载，请耐心等待...", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			Button rightDownloadBtn=(Button)findViewById(R.id.rightDownloadBtn);
-			rightDownloadBtn.setVisibility(View.GONE);
-			Button rightReadBtn=(Button)findViewById(R.id.rightReadBtn);
-			rightReadBtn.setVisibility(View.GONE);
-			ProgressBar rightProgressBar=(ProgressBar)findViewById(R.id.rightProgress);
-			rightProgressBar.setVisibility(View.VISIBLE);
+//			Button rightDownloadBtn=(Button)findViewById(R.id.rightDownloadBtn);
+//			rightDownloadBtn.setVisibility(View.GONE);
+//			Button rightReadBtn=(Button)findViewById(R.id.rightReadBtn);
+//			rightReadBtn.setVisibility(View.GONE);
+			//ProgressBar rightProgressBar=(ProgressBar)findViewById(R.id.rightProgress);
+			//rightProgressBar.setVisibility(View.VISIBLE);
 			Integer magIndex=(Integer) v.getTag();
 			downloadMag(magIndex,null);
 			
@@ -946,6 +979,10 @@ public class BookshelfActivity extends Activity {
 		ImageButton btn=(ImageButton)v;
 		btn.setImageResource(R.drawable.new_btn_list_on);
 		findViewById(R.id.listLinearLayout).setVisibility(View.VISIBLE);
+		ImageButton delImgBtn=(ImageButton)findViewById(R.id.btn_del);
+		delImgBtn.setVisibility(View.VISIBLE);
+		ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
+		listImgBtn.setVisibility(View.GONE);
 	}
 	
 	private void layoutInvisible(){
@@ -962,8 +999,8 @@ public class BookshelfActivity extends Activity {
 		ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
 		listImgBtn.setImageResource(R.drawable.new_btn_list_off);
 		
-		ImageButton dingyueImgBtn=(ImageButton)findViewById(R.id.btn_dingyue);
-		dingyueImgBtn.setImageResource(R.drawable.btn_dingyue_off);
+//		ImageButton dingyueImgBtn=(ImageButton)findViewById(R.id.btn_dingyue);
+//		dingyueImgBtn.setImageResource(R.drawable.btn_dingyue_off);
 		
 		ImageButton gerenImgBtn=(ImageButton)findViewById(R.id.btn_geren);
 		gerenImgBtn.setImageResource(R.drawable.new_btn_geren_off);
@@ -978,6 +1015,10 @@ public class BookshelfActivity extends Activity {
 		ImageButton btn=(ImageButton)v;
 		btn.setImageResource(R.drawable.new_btn_geren_on);
 		findViewById(R.id.gerenFrameLayout).setVisibility(View.VISIBLE);
+		ImageButton delImgBtn=(ImageButton)findViewById(R.id.btn_del);
+		delImgBtn.setVisibility(View.GONE);
+		ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
+		listImgBtn.setVisibility(View.VISIBLE);
 	}
 
 	public void banquanClick(View v){
@@ -986,14 +1027,23 @@ public class BookshelfActivity extends Activity {
 		ImageButton btn=(ImageButton)v;
 		btn.setImageResource(R.drawable.new_btn_banquan_on);
 		findViewById(R.id.banquanImg).setVisibility(View.VISIBLE);
+		ImageButton delImgBtn=(ImageButton)findViewById(R.id.btn_del);
+		delImgBtn.setVisibility(View.GONE);
+		ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
+		listImgBtn.setVisibility(View.VISIBLE);
 	}
 
 	public void shuqianClick(View v){
 		layoutInvisible();
 		setImageDrawable();
 		ImageButton btn=(ImageButton)v;
-		btn.setImageResource(R.drawable.btn_shuqian_on);
+		//btn.setImageResource(R.drawable.btn_shuqian_on);
+		btn.setImageResource(R.drawable.new_btn_geren_on);
 		findViewById(R.id.shuqianGrid).setVisibility(View.VISIBLE);
+		ImageButton delImgBtn=(ImageButton)findViewById(R.id.btn_del);
+		delImgBtn.setVisibility(View.GONE);
+		ImageButton listImgBtn=(ImageButton)findViewById(R.id.list);
+		listImgBtn.setVisibility(View.VISIBLE);
 	}
 
 	public void qrClick(View v){
@@ -1014,9 +1064,27 @@ public class BookshelfActivity extends Activity {
 		btn.setImageResource(R.drawable.btn_dingyue_on);
 	}
 	public void delClick(View v){
+		isDel = !isDel;
 		setImageDrawable();
 		ImageButton btn=(ImageButton)v;
-		btn.setImageResource(R.drawable.btn_delete_on);
+		GridView layout=(GridView)findViewById(R.id.scroll_layout2);
+		
+		for(int i=0;i<layout.getChildCount();i++){
+			View view=layout.getChildAt(i);
+			ImageView new_del=(ImageView)view.findViewById(R.id.new_del);
+			int position = layout.getFirstVisiblePosition()+i;
+			int status=magList.get(position).getStatus();
+			if(status==4&&isDel){
+    			new_del.setVisibility(View.VISIBLE);
+    		}else{
+    			new_del.setVisibility(View.GONE);
+    		}
+		}
+		if(!isDel){
+			btn.setImageResource(R.drawable.btn_delete_off);
+		}else{
+			btn.setImageResource(R.drawable.btn_delete_on);
+		}
 	}
 
 	public void openMagaine(final String magId,final String magName,final int index){
@@ -1094,8 +1162,8 @@ public class BookshelfActivity extends Activity {
 		}
 		preLayout.removeAllViews();*/
 		
-		LinearLayout bottomLayout=(LinearLayout)findViewById(R.id.scroll_layout);
-		objs.add(bottomLayout);
+//		LinearLayout bottomLayout=(LinearLayout)findViewById(R.id.scroll_layout);
+//		objs.add(bottomLayout);
 		/*childCount=bottomLayout.getChildCount();
 		for(int i=0;i<childCount;i++){
 			LinearLayout itemLayout=(LinearLayout)bottomLayout.getChildAt(i);
@@ -1104,8 +1172,8 @@ public class BookshelfActivity extends Activity {
 		}
 		bottomLayout.removeAllViews();*/
 		
-		ScrollView bottomScroll=(ScrollView)findViewById(R.id.bottomScroll);
-		objs.add(bottomScroll);
+//		ScrollView bottomScroll=(ScrollView)findViewById(R.id.bottomScroll);
+//		objs.add(bottomScroll);
 		/*Drawable  bottomDrawable=bottomScroll.getBackground();
 		if(bottomDrawable!=null){
 			Bitmap bottomBm=((BitmapDrawable)bottomDrawable).getBitmap();

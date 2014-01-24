@@ -3,18 +3,40 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:clipChildren="false">
     <LinearLayout
         android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
-	    android:gravity="center">
-	 <ImageView 
-        android:layout_height="291dp" 
-        android:id="@+id/item_imageView"   
-        android:layout_width="223dp" 
-        android:layout_gravity="center"
-        android:src="@drawable/pic"></ImageView>   
+	    android:gravity="center"
+	    android:clipChildren="false">
+	 <AbsoluteLayout 
+	     android:layout_height="291dp" 
+	     android:layout_width="223dp" 
+	     android:layout_gravity="center">
+		 <ImageView 
+	        android:layout_height="291dp" 
+	        android:id="@+id/item_imageView"   
+	        android:layout_width="223dp" 
+	        android:layout_gravity="center"
+	        android:src="@drawable/pic"></ImageView>   
+	     <com.rabbit.magazine.view.ProgressView 
+	        android:id="@+id/pro2"
+	        android:layout_width="223dp"
+	        android:layout_height="291dp"
+	        android:visibility="gone"/>
+	     
+	    <ImageView 
+	       android:layout_height="35dp" 
+	       android:layout_x="-13dp"
+	       android:layout_y="-13dp"
+	       android:id="@+id/new_del"   
+	       android:layout_width="36dp" 
+	       android:layout_gravity="center"
+	       android:visibility="gone"
+	       android:src="@drawable/new_del"></ImageView> 
+    </AbsoluteLayout>
     <TextView 
         android:text="2013年7月刊 总223期" 
         android:id="@+id/item_textView"   
@@ -49,7 +71,7 @@
         android:layout_width="200dip"
         android:layout_height="20dip"
         android:max="100"
-        android:visibility="visible"
+        android:visibility="gone"
         style="?android:attr/progressBarStyleHorizontal"/>
    	<TextView 
         android:id="@+id/unzip"

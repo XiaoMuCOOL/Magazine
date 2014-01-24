@@ -67,6 +67,16 @@ public class MagazineService {
 			db.close();
 		}
 	}
+	public void deleteAll(int id){
+//		SQLiteDatabase db = openHelper.getWritableDatabase();
+//		db.beginTransaction();
+//		db.delete("maginfo", "id=?", new String[]{String.valueOf(id)});
+//		db.setTransactionSuccessful();
+//		db.endTransaction();
+//		if(db!=null&&db.isOpen()){
+//			db.close();
+//		}
+	}
 	
 	public List<FavoriteInfo> getAllFavorites(){
 		SQLiteDatabase db = openHelper.getReadableDatabase();
