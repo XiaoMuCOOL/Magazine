@@ -4,23 +4,35 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:clipToPadding="false">
     <LinearLayout
         android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
 	    android:gravity="center"
-	    android:clipChildren="false">
+	    android:clipChildren="false"
+	    android:clipToPadding="false">
 	 <AbsoluteLayout 
 	     android:layout_height="291dp" 
-	     android:layout_width="223dp" 
-	     android:layout_gravity="center">
+	     android:layout_width="233dp" 
+	     android:layout_gravity="center"
+	     android:clipChildren="false"
+	     android:clipToPadding="false"
+	     android:paddingTop="10dp"
+	     android:paddingLeft="10dp">
 		 <ImageView 
 	        android:layout_height="291dp" 
 	        android:id="@+id/item_imageView"   
 	        android:layout_width="223dp" 
 	        android:layout_gravity="center"
 	        android:src="@drawable/pic"></ImageView>   
+	    <ImageView 
+	        android:layout_height="291dp" 
+	        android:id="@+id/item_mask"   
+	        android:layout_width="223dp" 
+	        android:layout_gravity="center"
+	        android:background="#50000000"></ImageView>  
 	     <com.rabbit.magazine.view.ProgressView 
 	        android:id="@+id/pro2"
 	        android:layout_width="223dp"
@@ -29,8 +41,8 @@
 	     
 	    <ImageView 
 	       android:layout_height="35dp" 
-	       android:layout_x="-13dp"
-	       android:layout_y="-13dp"
+	       android:layout_x="-10dp"
+	       android:layout_y="-10dp"
 	       android:id="@+id/new_del"   
 	       android:layout_width="36dp" 
 	       android:layout_gravity="center"

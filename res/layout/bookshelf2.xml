@@ -75,20 +75,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false">
+        
         <RelativeLayout 
             android:id="@+id/listLinearLayout"
             android:layout_width="match_parent"
         	android:layout_height="wrap_content"
         	android:visibility="visible"
         	android:clipChildren="false"
-        	android:layout_marginLeft="82dip">
+        	android:clipToPadding="false"
+        	android:layout_marginLeft="82dip"><!-- mar82dip,w859,h608 -->
+        	
         	<RelativeLayout 
         	    android:id="@+id/curMagLayout"
-		        android:layout_width="859dip"
-		        android:layout_height="608dip"
+		        android:layout_width="1024dip"
+		        android:layout_height="768dip"
         		android:visibility="gone"
-        		android:background="#000000"
-        		android:clipChildren="false">
+        		android:clipChildren="false"
+        		android:onClick="curMagLayoutClick"
+        		android:soundEffectsEnabled="false">
+        		
+       		<!-- <HorizontalScrollView 
+       		    android:layout_width="1024dip"
+       		    android:layout_height="768dip"> -->
+       		    
+		        <LinearLayout 
+		            android:id="@+id/rightLayout"
+		            android:layout_width="859dip"
+		        	android:layout_height="608dip"
+		        	android:orientation="vertical"
+        			android:background="#000000">
         		<ImageView 
 			       android:layout_height="35dp" 
 			       android:id="@+id/del_pre"   
@@ -96,13 +111,8 @@
 			       android:layout_marginRight="-13dip"
 			       android:layout_marginTop="-13dip"
 			       android:layout_width="36dp" 
-			       android:layout_gravity="center"
+			       android:layout_gravity="right"
 			       android:src="@drawable/new_del"></ImageView> 
-		        <LinearLayout 
-		            android:id="@+id/rightLayout"
-		            android:layout_width="wrap_content"
-		        	android:layout_height="wrap_content"
-		        	android:orientation="vertical">
 		        	
 		        	<HorizontalScrollView 
 		        	    android:id="@+id/preScroll"
@@ -146,21 +156,21 @@
 	        			android:layout_height="wrap_content"/>
 		        	</LinearLayout>
 		        </LinearLayout>
+    			<!-- </HorizontalScrollView> -->
 		    </RelativeLayout> 
-    
         	<!-- Horizontal -->
         	<GridView 
             android:id="@+id/scroll_layout2"
             android:numColumns="4"
             android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:verticalSpacing="40dp"
-        	android:paddingLeft="20dp"
+        	android:verticalSpacing="10dp"
         	android:paddingTop="20dp"
         	android:paddingBottom="20dp"
         	android:background="@drawable/new_bg_all"
         	android:clipChildren="false"
-        	android:layout_marginLeft="-82dip"></GridView>
+        	android:clipToPadding="false"
+        	android:layout_marginLeft="-92dip"></GridView>
        		<!-- <ImageView 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -168,6 +178,7 @@
                 android:layout_marginTop="10dip"
                 android:src="@drawable/banquan"/> -->
         </RelativeLayout>
+        
         <FrameLayout 
             android:id="@+id/gerenFrameLayout"
             android:layout_width="match_parent"

@@ -34,16 +34,16 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -362,10 +362,10 @@ public class BookshelfActivity extends Activity {
 //		coverParams.height=coverFrames[3];
 //		coverParams.setMargins(coverFrames[0], 0, 0, 0);
 		
-		LinearLayout rightLayout=(LinearLayout)findViewById(R.id.rightLayout);
-		LayoutParams rightParams=(LayoutParams) rightLayout.getLayoutParams();
-		int[] marge_right=FrameUtil.autoAdjust(new int[]{30},this);
-		rightParams.setMargins(0, 0, marge_right[0], 0);
+//		LinearLayout rightLayout=(LinearLayout)findViewById(R.id.rightLayout);
+//		LayoutParams rightParams=(LayoutParams) rightLayout.getLayoutParams();
+//		int[] marge_right=FrameUtil.autoAdjust(new int[]{30},this);
+//		rightParams.setMargins(0, 0, marge_right[0], 0);
 		
 //		TextView descTv=(TextView)findViewById(R.id.description);
 //		android.widget.LinearLayout.LayoutParams descParams=(android.widget.LinearLayout.LayoutParams)descTv.getLayoutParams();
@@ -1063,21 +1063,33 @@ public class BookshelfActivity extends Activity {
 		ImageButton btn=(ImageButton)v;
 		btn.setImageResource(R.drawable.btn_dingyue_on);
 	}
+	public void curMagLayoutClick(View v){
+		RelativeLayout curMagLayout = (RelativeLayout)v;
+		
+	}
 	public void delClick(View v){
 		isDel = !isDel;
 		setImageDrawable();
 		ImageButton btn=(ImageButton)v;
 		GridView layout=(GridView)findViewById(R.id.scroll_layout2);
-		
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate_shake);
+//		Animation animation = new RotateAnimation(-2, 2,Animation.RELATIVE_TO_SELF, 0.5f,Animation.RELATIVE_TO_SELF,0.5f);  
+//		animation.setDuration(120); 
+//		animation.setRepeatMode(Animation.REVERSE);
+//		animation.setRepeatCount(Animation.INFINITE);
+        
 		for(int i=0;i<layout.getChildCount();i++){
 			View view=layout.getChildAt(i);
 			ImageView new_del=(ImageView)view.findViewById(R.id.new_del);
+			ImageView item_imageView=(ImageView)view.findViewById(R.id.item_imageView);
 			int position = layout.getFirstVisiblePosition()+i;
 			int status=magList.get(position).getStatus();
 			if(status==4&&isDel){
     			new_del.setVisibility(View.VISIBLE);
+    			view.startAnimation(animation);
     		}else{
     			new_del.setVisibility(View.GONE);
+    			view.clearAnimation();
     		}
 		}
 		if(!isDel){
