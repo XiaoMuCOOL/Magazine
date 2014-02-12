@@ -72,7 +72,10 @@ public class ImageAdapter extends BaseAdapter{
             Bitmap bm=ImageUtil.loadImage(path);
     		imageView.setImageBitmap(bm);
         	textView = (TextView)convertView.findViewById(R.id.item_textView); 
-    		textView.setText(magList.get(position).getTitle()+" ID:" + magList.get(position).getId() + " \r\n position:" + position);
+        	//String txt = magList.get(position).getTitle()+" ID:" + magList.get(position).getId() + " \r\n position:" + position;
+        	String txt =  magList.get(position).getTitle()+ " us:" + magList.get(position).getUpdatetick();
+        	textView.setText(magList.get(position).getTitle());
+        	textView.setText(txt);
     		/*ImageView readBtn = (ImageView)convertView.findViewById(R.id.reading); 
     		ImageView downBtn = (ImageView)convertView.findViewById(R.id.download); */
     		Button readBtn = (Button)convertView.findViewById(R.id.reading); 

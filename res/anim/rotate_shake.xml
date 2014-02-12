@@ -3,12 +3,12 @@
      android:shareInterpolator="true">
     <!-- 动画效果  不停抖动，变幻时间为500毫秒-->
     <rotate  
-        android:duration="1000"  
+        android:duration="100"  
         android:fromDegrees="-3"  
         android:pivotX="50%"  
         android:pivotY="50%"  
         android:toDegrees="3" 
-        android:repeatMode="restart"
+        android:repeatMode="reverse"
         android:repeatCount="infinite"
         android:startOffset="0"/>
 </set>

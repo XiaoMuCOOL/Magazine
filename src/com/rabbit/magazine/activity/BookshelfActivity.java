@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,7 @@ import com.rabbit.magazine.parser.MagazineReader;
 import com.rabbit.magazine.service.DownloadService;
 import com.rabbit.magazine.util.FrameUtil;
 import com.rabbit.magazine.util.ImageUtil;
+import com.rabbit.magazine.util.MagazineinfoComparator;
 import com.rabbit.magazine.view.ProgressView;
 
 /**
@@ -175,6 +177,7 @@ public class BookshelfActivity extends Activity {
 		        scroll_layout2.setAdapter(adapterSimple);*/
 
 		        //Collections.reverse(magList);
+				Collections.sort(magList, new MagazineinfoComparator());
 		        scroll_layout2.setAdapter(new ImageAdapter(BookshelfActivity.this,magList,fromMagazineActivity));   
 		        //单击GridView元素的响应  
 		        /*scroll_layout2.setOnItemClickListener(new OnItemClickListener() {
@@ -626,7 +629,8 @@ public class BookshelfActivity extends Activity {
 
 		TextView t =(TextView) itemLayout.findViewById(R.id.item_textView);
 		Magazineinfo mag=magList.get(position);
-		String txt = mag.getTitle() + " ID:" + mag.getId() + " \r\n position:" + position;
+		//String txt = mag.getTitle() + " ID:" + mag.getId() + " \r\n position:" + position;
+		String txt = mag.getTitle() + " us:" + mag.getUpdatetick();
 		if(!t.getText().equals(txt)){
 			return;
 		}
@@ -636,7 +640,7 @@ public class BookshelfActivity extends Activity {
 		Button readingBtn=(Button)itemLayout.findViewById(R.id.reading);
 		//Button previewBtn=(Button)itemLayout.findViewById(R.id.preview);
 		Button downloadBtn=(Button)itemLayout.findViewById(R.id.download);
-		t.setText(txt);
+		//t.setText(txt);
 		
 		switch(code){
 		case 0:

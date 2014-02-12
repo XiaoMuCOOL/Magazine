@@ -38,7 +38,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 				"iosprice varchar(255), " +
 				"previewimage text, " +
 				"status integer, " +
-				"description text)");
+				"description text, " +
+				"updatetick varchar(255))");
+				//"description text)");
 		
 		db.execSQL("CREATE TABLE IF NOT EXISTS gereninfo (" +
 				"id integer primary key autoincrement, " +

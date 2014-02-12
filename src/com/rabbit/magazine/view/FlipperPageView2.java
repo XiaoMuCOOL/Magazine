@@ -32,7 +32,7 @@ public class FlipperPageView2 extends ViewPager implements android.view.View.OnT
 	
 	private NavBarPopupWindow popupWindow;
 	
-	private CollectPopupWindow collectPopupWindow;
+	public CollectPopupWindow collectPopupWindow;
 	
 	public List<PageView2> getmPages() {
 		return mPages;
@@ -56,6 +56,7 @@ public class FlipperPageView2 extends ViewPager implements android.view.View.OnT
 			// position:当前选中的页面，这事件是在页面跳转完毕的时候调用的。
 			@Override
 			public void onPageSelected(int position) {
+				popupWindow.setB(position);
 				popupWindow.setIndex(position);
 				popupWindow.loadBitmap();
 				isVideoStop=false;
@@ -98,12 +99,13 @@ public class FlipperPageView2 extends ViewPager implements android.view.View.OnT
 		if(popupWindow.isShowing()){
 			popupWindow.dismiss();
 		}else{
-			popupWindow.showAtLocation(this, Gravity.LEFT|Gravity.TOP, 0, 0);
+			popupWindow.showAtLocation(this, Gravity.LEFT|Gravity.BOTTOM, 0, 0);
+			
 		}
 		if(collectPopupWindow.isShowing()){
 			collectPopupWindow.dismiss();
 		}else{
-			collectPopupWindow.showAtLocation(this, Gravity.LEFT|Gravity.BOTTOM, 0, 0);
+			collectPopupWindow.showAtLocation(this, Gravity.LEFT|Gravity.TOP, 0, 0);
 		}
 	}
 	

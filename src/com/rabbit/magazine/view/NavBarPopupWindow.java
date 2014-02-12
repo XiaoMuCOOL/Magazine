@@ -4,10 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import com.rabbit.magazine.AppConfigUtil;
+import com.rabbit.magazine.FavoriteInfo;
 import com.rabbit.magazine.R;
 import com.rabbit.magazine.adapter.NavBarAdapter;
+import com.rabbit.magazine.db.MagazineService;
+import com.rabbit.magazine.kernel.BasicView;
 import com.rabbit.magazine.util.ImageUtil;
 
 import android.app.Activity;
@@ -15,10 +19,12 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -48,11 +54,13 @@ public class NavBarPopupWindow extends PopupWindow {
 	
 	private Bitmap[] bms;
 	
+	public boolean[] b;
+	
 	private int count;
 	
 	private Context context;
 	
-	public NavBarPopupWindow(Context context,FlipperPageView2 flipperPageView){
+	public NavBarPopupWindow(final Context context,final FlipperPageView2 flipperPageView){
 		super(context);
 		this.context=context;
 		this.flipperPageView=flipperPageView;
@@ -88,15 +96,19 @@ public class NavBarPopupWindow extends PopupWindow {
 				}
 			});
 			bms=new Bitmap[filenames.length];
+			b = new boolean[filenames.length];
+			setB(0);
 			count=filenames.length;
 			gallery=(Gallery) layout.findViewById(R.id.gallery);
-			adapter=new NavBarAdapter(bms,context);
+			adapter=new NavBarAdapter(b,bms,context);
 			gallery.setAdapter(adapter);
+			gallery.setCallbackDuringFling(false);
 			gallery.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 						long arg3) {
-					gallery.setSelection(arg2);
+					setB(arg2);
+					//gallery.setSelection(arg2);
 					int curItem=NavBarPopupWindow.this.flipperPageView.getCurrentItem();
 					if(curItem!=arg2){
 						NavBarPopupWindow.this.flipperPageView.videoPause();
@@ -107,6 +119,22 @@ public class NavBarPopupWindow extends PopupWindow {
 			gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					View layout= ((Activity)context).getLayoutInflater().inflate(R.layout.collect, null);
+					Button btn=flipperPageView.collectPopupWindow.btn;
+					MagazineService magService=new MagazineService(context);
+					int curIndex=flipperPageView.getCurrentItem();
+					String orientation;
+					if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+						orientation=BasicView.LANDSCAPE;
+					}else{
+						orientation=BasicView.PORTRAIT;
+					}
+					List<FavoriteInfo> list=magService.queryFavorite(AppConfigUtil.MAGAZINE_ID, curIndex,orientation);
+					if(list.size()>0){
+						btn.setBackgroundResource(R.drawable.bt_collection);
+					}else{
+						btn.setBackgroundResource(R.drawable.new_sc1);
+					}
 					index=position;
 					int k=0;
 					for(int i=2;i>=1;i--){
@@ -141,6 +169,15 @@ public class NavBarPopupWindow extends PopupWindow {
 		}
 	}
 	
+	public void setB(int index){
+		if(index<0 || index>=b.length){
+			return;
+		}
+		for(int i=0;i<b.length;i++){
+			b[i] = false;
+		}
+		b[index] = true;
+	}
 	public void loadBitmap(){
 		for(int i=0;i<count;i++){
 			boolean flag=false;
@@ -167,7 +204,7 @@ public class NavBarPopupWindow extends PopupWindow {
 			}
 		}
 		adapter.notifyDataSetChanged();
-		gallery.setSelection(index);
+		//gallery.setSelection(index);
 	}
 	
 	@Override

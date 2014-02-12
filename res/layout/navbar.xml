@@ -7,6 +7,7 @@
         android:id="@+id/gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:spacing="0px"
+        android:spacing="10dp"
+        android:fadingEdge="none"
         android:layout_alignParentTop="true"/>
 </RelativeLayout>

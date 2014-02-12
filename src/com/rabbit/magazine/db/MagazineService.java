@@ -28,6 +28,7 @@ public class MagazineService {
 		Cursor cursor=db.query("favoriteinfo", new String[]{"id"}, "magid=? and curindex=? and orientation=?", new String[]{magId,String.valueOf(curindex),orientation}, null, null, null);
 		while(cursor.moveToNext()){
 			FavoriteInfo info=new FavoriteInfo();
+			info.setId(cursor.getInt(0));
 			list.add(info);
 		}
 		if(db!=null&&db.isOpen()){
@@ -66,6 +67,16 @@ public class MagazineService {
 		if(db!=null&&db.isOpen()){
 			db.close();
 		}
+	}
+	public void delFavorite(String magId,int index){
+//		SQLiteDatabase db = openHelper.getWritableDatabase();
+//		db.beginTransaction();
+//		db.delete("favoriteinfo", "magId=?", new String[]{String.valueOf(magId)});
+//		db.setTransactionSuccessful();
+//		db.endTransaction();
+//		if(db!=null&&db.isOpen()){
+//			db.close();
+//		}
 	}
 	public void deleteAll(int id){
 //		SQLiteDatabase db = openHelper.getWritableDatabase();
@@ -158,8 +169,8 @@ public class MagazineService {
 			db.beginTransaction();
 			try{
 				Gson gson=new Gson();
-				db.execSQL("insert into maginfo(id, coverimage, zipurl,title,iosprice,previewimage,status,description) values(?,?,?,?,?,?,?,?)",
-						new Object[]{info.getId(), info.getCover_image(), info.getZip_url(),info.getTitle(),info.getIosprice(),gson.toJson(info.getPreview_image()),info.getStatus(),info.getDescription()});
+				db.execSQL("insert into maginfo(id, coverimage, zipurl,title,iosprice,previewimage,status,description,updatetick) values(?,?,?,?,?,?,?,?,?)",
+						new Object[]{info.getId(), info.getCover_image(), info.getZip_url(),info.getTitle(),info.getIosprice(),gson.toJson(info.getPreview_image()),info.getStatus(),info.getDescription(),info.getUpdatetick()});
 				db.setTransactionSuccessful();
 				db.endTransaction();
 			}finally{
@@ -179,7 +190,7 @@ public class MagazineService {
 	public List<Magazineinfo> getAllMagazines(){
 		SQLiteDatabase db = openHelper.getReadableDatabase();
 		List<Magazineinfo> list=new ArrayList<Magazineinfo>();
-		Cursor cursor =db.query("maginfo", new String[]{"id","zipurl","iosprice","title","description","previewimage","dbid","status","coverimage"}, null, null, null, null, null);
+		Cursor cursor =db.query("maginfo", new String[]{"id","zipurl","iosprice","title","description","previewimage","dbid","status","coverimage","updatetick"}, null, null, null, null, null);
 		while(cursor.moveToNext()){
 			Magazineinfo info=new Magazineinfo();
 			info.setId(cursor.getString(0));
@@ -193,6 +204,7 @@ public class MagazineService {
 			info.setDbid(cursor.getInt(6));
 			info.setStatus(cursor.getInt(7));
 			info.setCover_image(cursor.getString(8));
+			info.setUpdatetick(cursor.getString(9));
 			list.add(info);
 		}
 		if(db!=null&&db.isOpen()){
